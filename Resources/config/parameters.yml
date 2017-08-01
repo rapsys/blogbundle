@@ -1,0 +1,12 @@
+parameters:
+        blog.locales: en|fr
+        database_host: 127.0.0.1
+        database_port: null
+        database_name: blog
+        database_user: blog
+        database_password: MacfingOcGu9Pon9
+        mailer_transport: smtp
+        mailer_host: 127.0.0.1
+        mailer_user: null
+        mailer_password: null
+        secret: 60a2f0298adc4afb51cfb11c3828c08b40547bf9

@@ -1,0 +1,45 @@
+root:
+    path:     /
+    defaults: { _controller: RapsysBlogBundle:Default:root }
+
+homepage:
+    path:     /{_locale}
+    defaults: { _controller: RapsysBlogBundle:Page:index }
+    requirements:
+            _locale: '%blog.locales%'
+
+about:
+    path:     /{_locale}/about
+    defaults: { _controller: RapsysBlogBundle:Page:about }
+    requirements:
+            _locale: '%blog.locales%'
+
+contact:
+    path:     /{_locale}/contact
+    defaults: { _controller: RapsysBlogBundle:Page:contact }
+    requirements:
+            _locale: '%blog.locales%'
+
+articles:
+    path:     /{_locale}/articles
+    defaults: { _controller: RapsysBlogBundle:Default:articles }
+    requirements:
+            _locale: '%blog.locales%'
+
+articles_article:
+    path:     /{_locale}/articles/{_article}
+    defaults: { _controller: RapsysBlogBundle:Default:article }
+    requirements:
+            _locale: '%blog.locales%'
+
+tags:
+    path:     /{_locale}/tags
+    defaults: { _controller: RapsysBlogBundle:Default:tags }
+    requirements:
+            _locale: '%blog.locales%'
+
+tags_tag:
+    path:     /{_locale}/tags/{_tag}
+    defaults: { _controller: RapsysBlogBundle:Default:tag }
+    requirements:
+            _locale: '%blog.locales%'

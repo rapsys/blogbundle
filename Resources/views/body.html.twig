@@ -1,0 +1,42 @@
+{% extends 'RapsysBlogBundle::base.html.twig' %}
+{% block body %}
+	<body>
+		<section id="wrapper">
+			{% block header %}
+				<header id="header">
+					{% block nav %}
+						<nav>
+							<a href="{{ url('about') }}">About</a>
+							<a href="{{ url('contact') }}">Contact</a>
+						</nav>
+					{% endblock %}
+
+					{% block hgroup %}
+						<hgroup>
+							{% block blog_title %}<h1><a href="{{ url('homepage') }}">Dev log</a></h1>{% endblock %}
+							{% block blog_tagline %}
+								{% if tags is defined and tags %}
+									<ul>
+										{% for id, tag in tags %}
+											<li><h2><a href="#">Tag</a></h2></li>
+										{% endfor %}
+									</ul>
+								{% endif %}
+							{% endblock %}
+						</hgroup>
+					{% endblock %}
+				</header>
+			{% endblock %}
+
+			{% block sidebar %}<aside id="sidebar"></aside>{% endblock %}
+
+			{% block content %}<section id="content"></section>{% endblock %}
+
+			{% block footer %}
+				<footer id="footer">
+					<summary>Copyright 2016</summary> - Raphaël Gertz all rights reserved.
+				</footer>
+			{% endblock %}
+		</section>
+	</body>
+{% endblock %}

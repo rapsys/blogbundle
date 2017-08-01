@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>{% block title %}Welcome!{% endblock %} - Devlog</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		{% block stylesheets %}
+			{% stylesheets '//fonts.googleapis.com/css?family=Irish+Grover' '//fonts.googleapis.com/css?family=La+Belle+Aurore' '@RapsysBlogBundle/Resources/public/css/{reset,screen}.css' filter='toto' %}
+				<link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+			{% endstylesheets %}
+		{% endblock %}
+		{% block javascripts %}
+			{% javascripts '@RapsysBlogBundle/Resources/js/*.js' output='js/compiled/main.js' %}
+				<script src="{{ asset_url }}"></script>
+			{% endjavascripts %}
+		{% endblock %}
+		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+	</head>
+	{% block body %}<body></body>{% endblock %}
+</html>
