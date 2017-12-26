@@ -159,7 +159,7 @@ class Fixtures extends \Doctrine\Bundle\FixturesBundle\Fixture {
 					'title' => 'Comment détecter la tranparence dans des images PNG en PHP de manière fiable',
 					'description' => 'J\'ai récemment du trouver comment détecter en PHP les images PNG transparentes.
 Les codes trouvés ne semblaient pas fonctionner de manière satisfaisante pour les différents types de PNG à contrôler.
-J\'ai fini par utiliser la fonction suivante.',
+Voici la fonction que j\'ai fini par utiliser.',
 					'body' => 'J\'ai récemment du trouver comment détecter en PHP les images PNG transparentes.
 Les codes trouvés ne semblaient pas fonctionner de manière satisfaisante pour les différents types de PNG à contrôler.
 J\'ai fini par utiliser la fonction suivante:
@@ -218,7 +218,7 @@ En espérant que ça aidera quelqu\'un quelque part.'
 					'title' => 'How to reliably detect PNG image transparency with PHP',
 					'description' => 'I recently had to find out if a PNG has transparency using PHP.
 All the code I found didn\'t seemed to work correctly for the various kind of PNG I had to deal with.
-I finished using the following function.',
+Here is the function I used.',
 					'body' => 'I recently had to find out if a PNG has transparency using PHP.
 All the code I found didn\'t seemed to work correctly for the various kind of PNG I had to deal with.
 
