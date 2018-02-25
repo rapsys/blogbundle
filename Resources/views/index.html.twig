@@ -1,3 +1,28 @@
 {% extends 'RapsysBlogBundle::body.html.twig' %}
-{% block title %}Welcome!{% endblock %}
-{% block content %}Hello world !{% endblock %}
+{% block content %}
+<section id="content">
+	<h2><a href="{{ path('articles') }}">{% trans %}Articles list{% endtrans %}</a></h2>
+	{% for article in articles %}
+	<article>
+		<header>
+			<h3><a href="{{ path('articles_article', {'_article': article.slug}) }}">{{article.title}}</a></h3>
+			<p>
+				<span>{% trans with {'%date%': article.created|localizeddate('full', 'short')} %}Published the %date%{% endtrans %}{% if article.created != article.updated %}{% trans with {'%date%': article.updated|localizeddate('short', 'short')} %}, edited the %date%{% endtrans %}{% endif %}</span>
+				{% if article.keywords %}
+					<span>
+						{% transchoice article.keywords|length %}{1} Keyword:|]1,Inf[ Keywords:{% endtranschoice %}
+						{% for slug, keyword in article.keywords %}
+							<a href="{{ path('keywords_keyword', {'_keyword': slug}) }}">{{ keyword }}</a>
+						{% endfor %}
+					</span>
+				{% endif %}
+			</p>
+		</header>
+		<p>{{article.description}}</p>
+		<nav>
+			<a href="{{ path('articles_article', {'_article': article.slug}) }}">{% trans %}Read more{% endtrans %}...</a>
+		</nav>
+	</article>
+	{% endfor %}
+</section>
+{% endblock %}
