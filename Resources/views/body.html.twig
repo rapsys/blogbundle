@@ -1,42 +1,47 @@
 {% extends 'RapsysBlogBundle::base.html.twig' %}
 {% block body %}
 	<body>
-		<section id="wrapper">
-			{% block header %}
-				<header id="header">
-					{% block nav %}
-						<nav>
-							<a href="{{ url('about') }}">About</a>
-							<a href="{{ url('contact') }}">Contact</a>
-						</nav>
+		{% block header %}
+			<header id="header">
+				{% block header_title %}
+					{% block blog_title %}<h1><a href="{{ path('homepage') }}">{% trans %}Dev log{% endtrans %}</a></h1>{% endblock %}
+						{% block header_nav %}
+							<nav>
+								<h2>{% trans %}Navigation{% endtrans %}</h2>
+								<a href="{{ path('about') }}">{% trans %}About{% endtrans %}</a>
+								<a href="{{ path('contact') }}">{% trans %}Contact{% endtrans %}</a>
+							</nav>
+						{% endblock %}
+						{% block blog_subtitle %}{% endblock %}
+					{% block blog_tagline %}
+						{% if tags is defined and tags %}
+							<ul>
+								{% for id, tag in tags %}
+									<li><h2><a href="#">Tag</a></h2></li>
+								{% endfor %}
+							</ul>
+						{% endif %}
 					{% endblock %}
+				{% endblock %}
+			</header>
+		{% endblock %}
 
-					{% block hgroup %}
-						<hgroup>
-							{% block blog_title %}<h1><a href="{{ url('homepage') }}">Dev log</a></h1>{% endblock %}
-							{% block blog_tagline %}
-								{% if tags is defined and tags %}
-									<ul>
-										{% for id, tag in tags %}
-											<li><h2><a href="#">Tag</a></h2></li>
-										{% endfor %}
-									</ul>
-								{% endif %}
-							{% endblock %}
-						</hgroup>
-					{% endblock %}
-				</header>
-			{% endblock %}
+		{% block sidebar %}<aside id="sidebar"></aside>{% endblock %}
 
-			{% block sidebar %}<aside id="sidebar"></aside>{% endblock %}
+		{% block content %}<section id="content"></section>{% endblock %}
 
-			{% block content %}<section id="content"></section>{% endblock %}
-
-			{% block footer %}
-				<footer id="footer">
-					<summary>Copyright 2016</summary> - Raphaël Gertz all rights reserved.
-				</footer>
-			{% endblock %}
-		</section>
+		{% block footer %}
+			<footer id="footer">
+				<span>&nbsp;</span>
+				<details><summary>{% trans %}Raphaël Gertz all rights reserved{% endtrans %}</summary><span>{% trans %}Copyright 2016-2018{% endtrans %}.</span></details>
+				{% block footer_nav %}
+					<nav>
+						{% for locale in blog_locales if locale != app.request.locale %}
+							<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(app.request.query.all|merge({'_locale': locale}))) }}">{{ ('Display in ' ~ locale)|trans }}</a>
+						{% endfor %}
+					</nav>
+				{% endblock %}
+			</footer>
+		{% endblock %}
 	</body>
 {% endblock %}

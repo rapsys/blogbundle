@@ -1,0 +1,41 @@
+{% extends 'RapsysBlogBundle::body.html.twig' %}
+{% block blog_title %}<h1><a href="{{ path('homepage') }}">{% trans %}Dev log{% endtrans %}</a></h1>{% endblock %}
+{% block blog_subtitle %}<h2><a href="{{ path('contact') }}">{% trans %}Contact{% endtrans %}</a></h2>{% endblock %}
+{% block content %}
+	<section id="contact">
+		<header>
+			<h3><a href="{{ path('contact') }}">{% trans %}Contact{% endtrans %}</a></h3>
+		</header>
+		{% if sent %}
+			<p>{% trans %}Your message has been sent{% endtrans %}</p>
+		{% else %}
+			<div>
+				{{ form_start(form) }}
+					{# Render CSRF token etc .#}
+					<div>
+						{{ form_widget(form.subject) }}
+						{{ form_errors(form.subject) }}
+					</div>
+					<div>
+						{{ form_widget(form.name) }}
+						{{ form_errors(form.name) }}
+					</div>
+					<div>
+						{{ form_widget(form.email) }}
+						{{ form_errors(form.email) }}
+					</div>
+					<div>
+						{{ form_widget(form.message) }}
+						{{ form_errors(form.message) }}
+					</div>
+
+					{{ form_row(form.submit) }}
+
+					<div style="display:none">
+						{{ form_rest(form) }}
+					</div>
+				{{ form_end(form) }}
+			</div>
+		{% endif %}
+	</section>
+{% endblock %}

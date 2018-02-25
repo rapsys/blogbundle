@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>{{ subject }}</title>
+	<style>
+		body {background:white}
+		a {text-decoration:none;color:#0063c9}
+		a:hover {text-decoration:underline}
+		table {width: 100%;border-radius: .5rem}
+		table.head {background:#00c3f9;text-align:center}
+		table.body {background:white;border:1px solid #00c3f9;margin:.5rem 0;color:#066}
+		table.footer {background:#00c3f9}
+		table.footer details {text-align:center;color:#0063c9;font-weight:bold}
+		table.footer summary:after {display:none}
+		table.footer summary::-webkit-details-marker {display:none}
+	</style>
+</head>
+<body>
+	<table class="head">
+		<tr>
+			<td><a href="{{ blog_url }}"><img src="data:image/png;base64, {{ blog_logo|base64_encode }}" alt="{{ blog_title }}" /></a></td>
+			<td><h1><a href="{{ blog_url }}">{{ blog_title }}</a></h1></td>
+		</tr>
+	</table>
+	<table class="body">
+		<tr>
+			<td>&nbsp;</td>
+			<td>
+				<h2>{% trans %}Hi,{% endtrans %} {{ contact_name }}</h2>
+				<h3>{% trans %}Subject:{% endtrans %} {{ subject }}</h3>
+				<p>{{ message|nl2br }}</p>
+			</td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+	<table class="footer">
+		<tr>
+			<td>&nbsp;</td>
+			<td><details><summary>{% trans %}Raphaël Gertz all rights reserved{% endtrans %}</summary><span>{% trans %}Copyright 2016-2018{% endtrans %}.</span></details></td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+</body>
+</html>

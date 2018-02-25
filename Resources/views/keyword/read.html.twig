@@ -1,0 +1,39 @@
+{% extends 'RapsysBlogBundle::body.html.twig' %}
+{% block blog_title %}<h1><a href="{{ path('homepage') }}">{% trans %}Dev log{% endtrans %}</a></h1>{% endblock %}
+{% block blog_subtitle %}<h2><a href="{{ path('keywords') }}">{% trans %}Keywords list{% endtrans %}</a></h2>{% endblock %}
+{% block content %}
+	{% if keyword is defined and keyword %}
+	<article id="keyword">
+		<header>
+			<h3><a href="{{ path('keywords_keyword', {'_keyword': keyword.slug}) }}">{{keyword.title}}</a></h3>
+			<p>
+				<span>{% trans with {'%date%': keyword.created|localizeddate('full', 'short')} %}Published the %date%{% endtrans %}{% if keyword.created != keyword.updated %}{% trans with {'%date%': keyword.updated|localizeddate('short', 'short')} %}, edited the %date%{% endtrans %}{% endif %}</span>
+			</p>
+		</header>
+		<p>{{ keyword.description }}</p>
+		{% if keyword.articles %}
+			<p style="margin-bottom: 0">{% transchoice keyword.articles|length %}{1} Article:|]1,Inf[ Articles:{% endtranschoice %}</p>
+			<nav>
+				<ul>
+					{% for slug, article in keyword.articles %}
+						<li><a href="{{ path('articles_article', {'_article': slug}) }}">{{ article }}</a></li>
+					{% endfor %}
+				</ul>
+			</nav>
+		{% endif %}
+	</article>
+	{% endif %}
+{% endblock %}
+{% block alternate %}
+	<link rel="alternate" href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" hreflang="{{ app.request.locale }}"/>
+	{% for locale, slug in keyword.slugs %}
+		<link rel="alternate" href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(app.request.query.all|merge({'_locale': locale, '_keyword': slug}))) }}" hreflang="{{ locale }}"/>
+	{% endfor %}
+{% endblock %}
+{% block footer_nav %}
+	<nav>
+		{% for locale, slug in keyword.slugs %}
+			<a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(app.request.query.all|merge({'_locale': locale, '_keyword': slug}))) }}">{{ ('Display in ' ~ locale)|trans }}</a>
+		{% endfor %}
+	</nav>
+{% endblock %}
