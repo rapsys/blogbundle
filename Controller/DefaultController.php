@@ -5,15 +5,14 @@ namespace Rapsys\BlogBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DefaultController extends Controller {
-	/**
-	 * Redirect on first supported language version
-	 */
+	//Redirect on first supported language version
 	public function rootAction() {
 		//Set default locale
 		$locale = 'en';
 
 		//Supported application languages
-		$supportedLanguage = explode('|', $this->getParameter('blog.locales'));
+		//XXX: Array for route validation is not supported by default (rapsys patch)
+		$supportedLanguage = $this->getParameter('blog.locales');
 
 		//Language list
 		if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
