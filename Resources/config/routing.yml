@@ -22,24 +22,27 @@ contact:
 
 articles:
     path:     /{_locale}/articles
-    defaults: { _controller: RapsysBlogBundle:Default:articles }
+    defaults: { _controller: RapsysBlogBundle:Page:articleIndex }
     requirements:
             _locale: '%blog.locales%'
 
 articles_article:
     path:     /{_locale}/articles/{_article}
-    defaults: { _controller: RapsysBlogBundle:Default:article }
+    defaults: { _controller: RapsysBlogBundle:Page:articleRead }
+    requirements:
+            _locale: '%blog.locales%'
+            #_article: '\d+'
+            _article: '[a-z0-9-]+'
+
+keywords:
+    path:     /{_locale}/keywords
+    defaults: { _controller: RapsysBlogBundle:Page:keywordIndex }
     requirements:
             _locale: '%blog.locales%'
 
-tags:
-    path:     /{_locale}/tags
-    defaults: { _controller: RapsysBlogBundle:Default:tags }
+keywords_keyword:
+    path: /{_locale}/keywords/{_keyword}
+    defaults: { _controller: RapsysBlogBundle:Page:keywordRead }
     requirements:
-            _locale: '%blog.locales%'
-
-tags_tag:
-    path:     /{_locale}/tags/{_tag}
-    defaults: { _controller: RapsysBlogBundle:Default:tag }
-    requirements:
-            _locale: '%blog.locales%'
+        _locale: '%blog.locales%'
+        _keyword: '[a-z0-9-]+'
