@@ -1,0 +1,43 @@
+Rapsys\BlogBundle\Entity\Language:
+        type: entity
+        repositoryClass: Rapsys\BlogBundle\Repository\LanguageRepository
+        table: languages
+        indexes:
+                iso6391:
+                        columns: [ iso6391 ]
+                iso6393:
+                        columns: [ iso6393 ]
+        id:
+                id:
+                        type: smallint
+                        generator: 
+                                strategy: AUTO
+                        options:
+                                unsigned: true
+        fields:
+                iso6391:
+                        type: string
+                        length: 2
+                iso6393:
+                        type: string
+                        length: 3
+                created:
+                        type: datetime
+                updated:
+                        type: datetime
+        oneToMany:
+                article_translations:
+                        targetEntity: Rapsys\BlogBundle\Entity\ArticleTranslation
+                        mappedBy: language
+                keyword_translations:
+                        targetEntity: Rapsys\BlogBundle\Entity\KeywordTranslation
+                        mappedBy: language
+                site_translations:
+                        targetEntity: Rapsys\BlogBundle\Entity\SiteTranslation
+                        mappedBy: language
+                language_translations:
+                        targetEntity: Rapsys\BlogBundle\Entity\LanguageTranslation
+                        mappedBy: language
+                target_translations:
+                        targetEntity: Rapsys\BlogBundle\Entity\LanguageTranslation
+                        mappedBy: target

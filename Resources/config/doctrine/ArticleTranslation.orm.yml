@@ -1,0 +1,38 @@
+Rapsys\BlogBundle\Entity\ArticleTranslation:
+    type: entity
+    repositoryClass: Rapsys\BlogBundle\Repository\ArticleTranslationRepository
+    table: articles_translations
+    id:
+        article_id:
+            type: integer
+            options:
+                unsigned: true
+        language_id:
+            type: smallint
+            options:
+                unsigned: true
+    fields:
+        slug:
+            type: string
+            length: 128
+        title:
+            type: string
+            length: 128
+        description:
+            type: text
+        body:
+            type: text
+        created:
+            type: datetime
+        updated:
+            type: datetime
+    manyToOne:
+        article:
+            targetEntity: Rapsys\BlogBundle\Entity\Article
+            inversedBy: article_translations
+        language:
+            targetEntity: Rapsys\BlogBundle\Entity\Language
+            inversedBy: article_translations
+    uniqueConstraints:
+        slug_language:
+            columns: [ slug, language_id ]

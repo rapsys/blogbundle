@@ -1,0 +1,24 @@
+Rapsys\BlogBundle\Entity\Keyword:
+        type: entity
+        repositoryClass: Rapsys\BlogBundle\Repository\KeywordRepository
+        table: keywords
+        id:
+                id:
+                        type: integer
+                        generator: 
+                                strategy: AUTO
+                        options:
+                                unsigned: true
+        fields:
+                created:
+                        type: datetime
+                updated:
+                        type: datetime
+        manyToMany:
+                articles:
+                        targetEntity: Rapsys\BlogBundle\Entity\Article
+                        mappedBy: keywords
+        oneToMany:
+                keyword_translations:
+                        targetEntity: Rapsys\BlogBundle\Entity\KeywordTranslation
+                        mappedBy: keyword

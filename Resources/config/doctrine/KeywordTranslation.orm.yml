@@ -1,0 +1,36 @@
+Rapsys\BlogBundle\Entity\KeywordTranslation:
+    type: entity
+    repositoryClass: Rapsys\BlogBundle\Repository\KeywordTranslationRepository
+    table: keywords_translations
+    id:
+        keyword_id:
+            type: integer
+            options:
+                unsigned: true
+        language_id:
+            type: smallint
+            options:
+                unsigned: true
+    fields:
+        slug:
+            type: string
+            length: 128
+        title:
+            type: string
+            length: 128
+        description:
+            type: text
+        created:
+            type: datetime
+        updated:
+            type: datetime
+    manyToOne:
+        keyword:
+            targetEntity: Rapsys\BlogBundle\Entity\Keyword
+            inversedBy: keyword_translations
+        language:
+            targetEntity: Rapsys\BlogBundle\Entity\Language
+            inversedBy: keyword_translations
+    uniqueConstraints:
+        slug_language:
+            columns: [ slug, language_id ]
