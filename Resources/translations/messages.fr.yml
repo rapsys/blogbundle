@@ -1,0 +1,24 @@
+# messages.fr.yml
+Dev log: Journal d'un dev
+Read more: En savoir plus
+Welcome to Dev log: Bienvenue sur le journal d'un dev
+Articles list: Liste des articles
+About: À propos
+Contact: Contacter
+Navigation: Navigation
+Copyright 2016-2018: Droit d'auteur 2016-2018
+Raphaël Gertz all rights reserved: Raphaël Gertz tous droits réservés
+"Published the %date%": "Publié le %date%"
+", edited the %date%": ", edité le %date%"
+"{1} Keyword:|]1,Inf[ Keywords:": "{1} Mot clé :|]1,Inf[ Mots clés :"
+Display in en: Display in english
+Keywords list: Liste des mots clés
+"{1} Article:|]1,Inf[ Articles:": "{1} Article :|]1,Inf[ Articles :"
+'Hi,': 'Salut,'
+'Subject:': 'Sujet :'
+Your message has been sent: Votre message a bien été envoyé
+Send: Envoyer
+Subject: Sujet
+Your name: Votre nom
+Your email address: Votre courriel
+Your message here: Votre message ici
