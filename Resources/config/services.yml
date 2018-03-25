@@ -2,3 +2,6 @@ services:
     twig.extension.intl:
         class: Twig_Extensions_Extension_Intl
         tags: [ twig.extension ]
+    rapsys_blog.twig.base64:
+        class: Rapsys\BlogBundle\Twig\Base64Extension
+        tags: [ twig.extension ]
