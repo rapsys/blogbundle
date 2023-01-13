@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\DataFixtures\ORM;
+namespace Rapsys\BlogBundle\DataFixtures\ORM;
 
 #Article.php  ArticleTranslation.php  Author.php  Keyword.php  KeywordTranslation.php  Language.php  Site.php  SiteTranslation.php
 
@@ -736,3 +736,37 @@ Microsoft Azure Ip ranges urls:
 //- add code for amazon ip range detection
 //- add code for microsoft ip range detection
 //- add ??? article*/
+//
+//- add article ihttpd
+//- add article distgen
+//- add article distcook
+//- add article install
+//
+//while [ ! -z "$(pidof dd)" ]; do killall -USR1 dd; sleep 300; done; echo 'Server ready' | mail -r 'aurae@rapsys.eu' -s 'Server ready' aurae@rapsys.eu
+
+
+/*
+Pour l'article sur distgen, un coup d'explication sur le perl
+
+#! /usr/bin/perl
+
+use strict;
+use warnings;
+
+use Socket qw(AF_INET inet_ntop inet_pton);
+
+my ($ip, $mask) = @ARGV;
+
+# binmask
+#print (2**$mask-1)<<(32-$mask), "\n";
+
+# first ip
+#print Socket::inet_ntop(Socket::AF_INET, pack('N', unpack('N', Socket::inet_pton(Socket::AF_INET, $ip)) & (2**$mask-1)<<(32-$mask))), "\n";
+
+# doted mask
+#print join('.', unpack('C4', pack('N', (2**$mask-1)<<(32-$mask)))), "\n";
+
+# last ip
+#print Socket::inet_ntop(Socket::AF_INET, pack('N', unpack('N', Socket::inet_pton(Socket::AF_INET, $ip)) | (2**(32 - $mask)))), "\n";
+
+ */
