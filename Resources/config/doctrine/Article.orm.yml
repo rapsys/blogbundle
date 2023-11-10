@@ -1,33 +1,32 @@
 Rapsys\BlogBundle\Entity\Article:
-        type: entity
-        repositoryClass: Rapsys\BlogBundle\Repository\ArticleRepository
-        table: articles
+    type: entity
+    repositoryClass: Rapsys\BlogBundle\Repository\ArticleRepository
+    table: articles
+    id:
         id:
-                id:
-                        type: integer
-                        generator: 
-                                strategy: AUTO
-                        options:
-                                unsigned: true
-        fields:
-                created:
-                        type: datetime
-                updated:
-                        type: datetime
-        manyToOne:
-                site:
-                        targetEntity: Rapsys\BlogBundle\Entity\Site
-                        inversedBy: articles
-                author:
-                        targetEntity: Rapsys\BlogBundle\Entity\Author
-                        inversedBy: articles
-        manyToMany:
-                keywords:
-                        targetEntity: Rapsys\BlogBundle\Entity\Keyword
-                        inversedBy: articles
-                        joinTable:
-                                name: articles_keywords
-        oneToMany:
-                article_translations:
-                        targetEntity: Rapsys\BlogBundle\Entity\ArticleTranslation
-                        mappedBy: article
+            type: integer
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        created:
+            type: datetime
+        updated:
+            type: datetime
+    manyToOne:
+        user:
+            targetEntity: Rapsys\BlogBundle\Entity\User
+            inversedBy: articles
+    manyToMany:
+        keywords:
+            targetEntity: Rapsys\BlogBundle\Entity\Keyword
+            inversedBy: articles
+            joinTable:
+                name: articles_keywords
+    oneToMany:
+        article_translations:
+            targetEntity: Rapsys\BlogBundle\Entity\ArticleTranslation
+            mappedBy: article
+    lifecycleCallbacks:
+        preUpdate: ['preUpdate']
