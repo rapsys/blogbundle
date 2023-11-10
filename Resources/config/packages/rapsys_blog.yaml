@@ -1,0 +1,223 @@
+# Dev log configuration
+#TODO: set mail, calendar and facebook app id as env variables ???
+rapsys_blog:
+    contact:
+        name: 'Raphaël Gertz'
+        mail: 'blog@rapsys.eu'
+    copy:
+        by: 'Rapsys'
+        link: 'https://rapsys.eu'
+        long: 'All rights reserved'
+        short: 'Copyright 2019-2023'
+        title: 'Rapsys'
+    donate: 'https://paypal.me/milongaraphael'
+    facebook:
+        #TODO: set this as env variables ???
+        apps: [ 3728770287223690 ]
+        height: 630
+        width: 1200
+    icon:
+        ico: '@RapsysBlog/ico/icon.ico'
+        png:
+            # Default
+            256: '@RapsysBlog/png/icon.256.png'
+
+            # For google
+            # Chrome for Android home screen icon
+            196: '@RapsysBlog/png/icon.196.png'
+            # Google Developer Web App Manifest Recommendation
+            192: '@RapsysBlog/png/icon.192.png'
+            # Chrome Web Store icon
+            128: '@RapsysBlog/png/icon.128.png'
+
+            # Fallback
+            32: '@RapsysBlog/png/icon.32.png'
+
+            # For apple
+            # XXX: old obsolete format: [57, 72, 76, 114, 120, 144]
+            # XXX: see https://webhint.io/docs/user-guide/hints/hint-apple-touch-icons/
+            # XXX: see https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html
+            # iPhone Retina
+            180: '@RapsysBlog/png/icon.180.png'
+            # iPad Retina touch icon
+            167: '@RapsysBlog/png/icon.167.png'
+            # iPad touch icon
+            152: '@RapsysBlog/png/icon.152.png'
+            # iOS7
+            120: '@RapsysBlog/png/icon.120.png'
+
+            # For windows
+            # XXX: see https://docs.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/dn255024(v=vs.85)
+            310: '@RapsysBlog/png/icon.310.png'
+            150: '@RapsysBlog/png/icon.150.png'
+            70: '@RapsysBlog/png/icon.70.png'
+        svg: '@RapsysBlog/svg/icon.svg'
+    languages:
+        en_gb: 'English'
+        fr_fr: 'French'
+    locale: 'fr_fr'
+    locales: [ 'fr_fr', 'en_gb' ]
+    logo:
+        png: '@RapsysBlog/png/logo.png'
+        svg: '@RapsysBlog/svg/logo.svg'
+        alt: 'Rapsys'' dev log logo'
+    root: 'rapsys_blog'
+    title: 'Rapsys'' dev log'
+
+# Doctrine configuration
+doctrine:
+    # Orm configuration
+    orm:
+        # Replace repository factory
+        repository_factory: 'Rapsys\BlogBundle\Factory\RepositoryFactory'
+
+        #Force resolution of UserBundle entities to BlogBundle one
+        #XXX: without these lines, relations are lookup in parent namespace ignoring BlogBundle extension
+        resolve_target_entities:
+            Rapsys\UserBundle\Entity\Group: 'Rapsys\BlogBundle\Entity\Group'
+            Rapsys\UserBundle\Entity\Civility: 'Rapsys\BlogBundle\Entity\Civility'
+            Rapsys\UserBundle\Entity\User: 'Rapsys\BlogBundle\Entity\User'
+
+# Framework configuration
+framework:
+    #TODO: replace in the dependency injection ???
+    default_locale: '%rapsys_blog.locale%'
+    disallow_search_engine_index: false
+    #error_controller: 'Rapsys\BlogBundle\Controller\ErrorController::show'
+    mailer:
+        headers:
+            X-Originating-IP: '%env(REMOTE_ADDR)%'
+    secret: '%env(APP_SECRET)%'
+    session:
+        enabled: true
+        handler_id: ~
+        storage_factory_id: 'session.storage.factory.native'
+        cookie_secure: 'auto'
+        cookie_samesite: 'lax'
+    translator:
+        fallbacks: '%rapsys_blog.locales%'
+
+# Security configuration
+security:
+    # Set password hashers
+    password_hashers:
+        #Rapsys\BlogBundle\Entity\User: plaintext
+        Rapsys\BlogBundle\Entity\User:
+            algorithm: 'bcrypt'
+
+    # Set providers
+    providers:
+        database:
+            entity:
+                class: Rapsys\BlogBundle\Entity\User
+                property: mail
+
+    # Set firewall
+    firewalls:
+        # Disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            # Allow anonymous access
+            #anonymous: ~
+            #lazy: true
+
+            # Activate database provider
+            provider: database
+
+            #XXX: https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+            #http_basic: ~
+
+            # Set form login
+            #XXX: https://symfony.com/doc/current/security/form_login_setup.html
+            #TODO: https://symfony.com/doc/current/security/guard_authentication.html
+            form_login:
+                # Redirect to referer if different from login route
+                use_referer: true
+                # Login path
+                login_path: rapsys_user_login
+                # Check path
+                check_path: rapsys_user_login
+                # Username parameter
+                username_parameter: 'login[mail]'
+                # Password parameter
+                password_parameter: 'login[password]'
+
+            # Set logout route
+            logout:
+                # Logout route
+                path: rapsys_user_logout
+                # Logout default target
+                target: rapsys_blog
+
+            # Set custom access denied handler
+            #access_denied_handler: Rapsys\BlogBundle\Handler\AccessDeniedHandler
+
+            # Remember me
+            #XXX: see https://symfony.com/doc/current/security/remember_me.html
+            remember_me:
+                # Use APP_SECRET
+                secret: '%kernel.secret%'
+                # Always remember me
+                always_remember_me: true
+
+    # Set role hierarchy
+    role_hierarchy:
+        ROLE_USER: [ 'ROLE_GUEST' ]
+        ROLE_ADMIN: [ 'ROLE_GUEST', 'ROLE_USER' ]
+
+#Service configuration
+services:
+    #Register abstract controller
+    Rapsys\BlogBundle\Controller\AbstractController:
+        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@request_stack', '@translator', '@twig' ]
+        tags: [ 'controller.service_arguments' ]
+    #Register article controller
+    Rapsys\BlogBundle\Controller\ArticleController:
+        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@request_stack', '@translator', '@twig' ]
+        tags: [ 'controller.service_arguments' ]
+    #Register default controller
+    Rapsys\BlogBundle\Controller\DefaultController:
+        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@request_stack', '@translator', '@twig' ]
+        tags: [ 'controller.service_arguments' ]
+    #Register keyword controller
+    Rapsys\BlogBundle\Controller\KeywordController:
+        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@request_stack', '@translator', '@twig' ]
+        tags: [ 'controller.service_arguments' ]
+    Rapsys\BlogBundle\Factory\RepositoryFactory:
+        arguments: [ '@request_stack', '@router', '@rapsys_pack.slugger_util', '@translator', '%rapsys_blog.languages%', '%rapsys_blog.locale%' ]
+    #Register blog fixture
+    Rapsys\BlogBundle\Fixture\BlogFixture:
+        tags: [ 'doctrine.fixture.orm' ]
+    #Register security password_hasher_factory as public
+    #XXX: required for command `php bin/console doctrine:`
+    security.password_hasher_factory:
+        class: 'Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory'
+        arguments: [ { 'Rapsys\BlogBundle\Entity\User': { class: 'Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher', arguments: [ ~, ~, ~, '2y'] } } ]
+        public: true
+    #Register facebook event subscriber
+    Rapsys\PackBundle\Subscriber\FacebookSubscriber:
+        arguments: [ '@router', '%rapsys_blog.locales%' ]
+        tags: [ 'kernel.event_subscriber' ]
+    #Register facebook util service
+    rapsys_blog.facebook_util:
+        class: 'Rapsys\PackBundle\Util\FacebookUtil'
+        #TODO: create the facebook.png file and add the fonts
+        arguments: [ '@router',  '%kernel.project_dir%/var/cache', '%rapsys_pack.path%', 'facebook', '%rapsys_blog.path%/png/facebook.png', { irishgrover: '%rapsys_blog.path%/ttf/irishgrover.v10.ttf', labelleaurore: '%rapsys_blog.path%/ttf/labelleaurore.v10.ttf', dejavusans: '%rapsys_blog.path%/ttf/dejavusans.2.37.ttf', droidsans: '%rapsys_blog.path%/ttf/droidsans.regular.ttf' } ]
+        public: true
+
+# Twig configuration
+twig:
+    #Enforce debug
+    debug: true
+    #auto_reload: ~
+    #Disable cache
+    #XXX: enable forced regeneration of css and js at each page load
+    cache: false
+    #Set twig paths
+    paths:
+        #Required by email.image(site_logo) directive
+        #XXX: Allow twig to resolve @RapsysBlog/png/logo.png in vendor/rapsys/blogbundle/Resources/public/png/logo.png
+        '%kernel.project_dir%/vendor/rapsys/blogbundle/Resources/public': 'RapsysBlog'
