@@ -1,0 +1,8 @@
+Rapsys\BlogBundle\Entity\Group:
+    type: entity
+    #repositoryClass: Rapsys\BlogBundle\Repository\GroupRepository
+    table: groups
+    manyToMany:
+        users:
+            targetEntity: Rapsys\BlogBundle\Entity\User
+            mappedBy: groups

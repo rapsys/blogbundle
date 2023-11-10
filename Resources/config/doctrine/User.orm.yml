@@ -1,0 +1,37 @@
+Rapsys\BlogBundle\Entity\User:
+    type: entity
+    repositoryClass: Rapsys\BlogBundle\Repository\UserRepository
+    table: users
+    fields:
+        pseudonym:
+            type: string
+            length: 64
+            nullable: true
+        slug:
+            type: string
+            length: 64
+            unique: true
+            nullable: true
+    oneToMany:
+        articles:
+            targetEntity: Rapsys\BlogBundle\Entity\Article
+            mappedBy: user
+        user_translations:
+            targetEntity: Rapsys\BlogBundle\Entity\UserTranslation
+            mappedBy: user
+#    manyToMany:
+#        groups:
+#            targetEntity: Group
+#            inversedBy: users
+#            joinTable:
+#                name: users_groups
+    associationOverride:
+        groups:
+            joinTable:
+                name: users_groups
+                joinColumns:
+                    id:
+                        name: user_id
+                inverseJoinColumns:
+                    id:
+                        name: group_id

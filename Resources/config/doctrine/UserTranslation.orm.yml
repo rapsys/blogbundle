@@ -1,0 +1,28 @@
+Rapsys\BlogBundle\Entity\UserTranslation:
+    type: entity
+    #repositoryClass: Rapsys\BlogBundle\Repository\UserTranslationRepository
+    table: users_translations
+    id:
+        user_id:
+            type: integer
+            options:
+                unsigned: true
+        locale:
+            type: string
+            length: 5
+    fields:
+        description:
+            type: text
+            nullable: true
+        created:
+            type: datetime
+        updated:
+            type: datetime
+    manyToOne:
+        user:
+            targetEntity: Rapsys\BlogBundle\Entity\User
+            inversedBy: user_translations
+            joinColumn:
+                nullable: false
+    lifecycleCallbacks:
+        preUpdate: ['preUpdate']
