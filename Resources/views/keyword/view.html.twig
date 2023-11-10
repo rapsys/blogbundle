@@ -1,0 +1,37 @@
+{% extends '@RapsysBlog/_base.html.twig' %}
+{% block title %}{% endblock %}
+{% block content %}
+	<article id="content">
+		<header>
+			<h1 id="title"><a href="{{ head.canonical }}">{{ title }}</a></h1>
+			<p>{% trans with {'%date%': keyword.created|format_datetime('full', 'short')} %}Published the %date%{% endtrans %}{% if keyword.created != keyword.updated %}{% trans with {'%date%': keyword.updated|format_datetime('short', 'short')} %}, edited the %date%{% endtrans %}{% endif %}</p>
+			<p>{{ keyword.description }}</p>
+		</header>
+		{% if keyword.articles is defined and keyword.articles %}
+			<section>
+				{% for article in keyword.articles %}
+					<article>
+						<header>
+							<h2><a href="{{ path('rapsys_blog_article_view', {'id': article.id, 'slug': article.slug}) }}">{{ article.title }}</a></h2>
+						</header>
+						<section>
+							<p>{{ article.description }}</p>
+							{% if article.keywords is defined and article.keywords %}
+								<nav>
+									{% for keyword in article.keywords %}
+										<a href="{{ path('rapsys_blog_keyword_view', {'id': keyword.id, 'slug': keyword.slug}) }}">{{ keyword.title }}</a>
+									{% endfor %}
+								</nav>
+							{% endif %}
+						</section>
+						<footer>
+							<nav>
+								<a href="{{ path('rapsys_blog_article_view', {'id': article.id, 'slug': article.slug}) }}">{% trans %}Read more{% endtrans %}...</a>
+							</nav>
+						</footer>
+					</article>
+				{% endfor %}
+			</section>
+		{% endif %}
+	</article>
+{% endblock %}

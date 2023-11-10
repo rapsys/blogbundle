@@ -1,0 +1,22 @@
+{% extends '@RapsysBlog/_base.html.twig' %}
+{% block title %}{% endblock %}
+{% block content %}
+	<article id="content">
+		<header>
+			<h1 id="title"><a href="{{ head.canonical }}">{{ title }}</a></h1>
+			<p>{% trans with {'%date%': article.created|format_datetime('full', 'short')} %}Published the %date%{% endtrans %}{% if article.created != article.updated %}{% trans with {'%date%': article.updated|format_datetime('short', 'short')} %}, edited the %date%{% endtrans %}{% endif %}</p>
+		</header>
+		<section>
+			{{ article.body|markdown_to_html }}
+		</section>
+		<footer>
+			{% if article.keywords is defined and article.keywords %}
+				<nav>
+					{% for keyword in article.keywords %}
+						<a href="{{ path('rapsys_blog_keyword_view', {'id': keyword.id, 'slug': keyword.slug}) }}">{{ keyword.title }}</a>
+					{% endfor %}
+				</nav>
+			{% endif %}
+		</footer>
+	</article>
+{% endblock %}
