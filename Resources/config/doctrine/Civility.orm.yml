@@ -1,0 +1,8 @@
+Rapsys\BlogBundle\Entity\Civility:
+    type: entity
+    #repositoryClass: Rapsys\BlogBundle\Repository\CivilityRepository
+    table: civilities
+    oneToMany:
+        users:
+            targetEntity: User
+            mappedBy: civility
