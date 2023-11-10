@@ -1,0 +1,151 @@
+#https://symfony.com/doc/current/controller.html#controller-request-argument
+#CRUD: edit, index, new, show, _delete_form, _form
+#https://symfony.com/doc/current/routing.html#localized-routes-i18n
+#SCRUD: index, add, edit, delete, view
+
+#TODO: rename view in show ???
+rapsys_blog:
+    path:
+        en_gb: '/en'
+        fr_fr: '/'
+    controller: Rapsys\BlogBundle\Controller\DefaultController::index
+    methods: GET
+
+rapsys_blog_about:
+    path:
+        en_gb: '/en/about'
+        fr_fr: '/a-propos'
+    controller: Rapsys\BlogBundle\Controller\DefaultController::about
+    methods: GET
+
+rapsys_blog_contact:
+    path:
+        en_gb: '/en/contact/{id<\d*>?}/{user<[\w-]*>?}'
+        fr_fr: '/contacter/{id<\d*>?}/{user<[\w-]*>?}'
+    controller: Rapsys\BlogBundle\Controller\DefaultController::contact
+    methods: GET|POST
+
+rapsys_blog_article:
+    path:
+        en_gb: '/en/article'
+        fr_fr: '/article'
+    controller: Rapsys\BlogBundle\Controller\ArticleController::index
+    methods: GET|POST
+
+rapsys_blog_article_view:
+    path:
+        en_gb: '/en/article/{id<\d*>?}/{slug<[\w-]*>?}'
+        fr_fr: '/article/{id<\d*>?}/{slug<[\w-]*>?}'
+    controller: Rapsys\BlogBundle\Controller\ArticleController::view
+    methods: GET|POST
+
+rapsys_blog_keyword:
+    path:
+        en_gb: '/en/keyword'
+        fr_fr: '/mot-cle'
+    controller: Rapsys\BlogBundle\Controller\KeywordController::index
+    methods: GET|POST
+
+rapsys_blog_keyword_view:
+    path:
+        en_gb: '/en/keyword/{id<\d*>?}/{slug<[\w-]*>?}'
+        fr_fr: '/mot-cle/{id<\d*>?}/{slug<[\w-]*>?}'
+    controller: Rapsys\BlogBundle\Controller\KeywordController::view
+    methods: GET|POST
+
+rapsys_air_frequently_asked_questions:
+    path:
+        en_gb: '/en/frequently-asked-questions'
+        fr_fr: '/foire-aux-questions'
+    controller: Rapsys\BlogBundle\Controller\DefaultController::frequentlyAskedQuestions
+    methods: GET
+
+rapsys_air_terms_of_service:
+    path:
+        en_gb: '/en/terms-of-service'
+        fr_fr: '/conditions-generales-d-utilisation'
+    controller: Rapsys\BlogBundle\Controller\DefaultController::termsOfService
+    methods: GET
+
+rapsys_air_user:
+    path:
+        en_gb: '/en/user'
+        fr_fr: '/utilisateur'
+    controller: Rapsys\BlogBundle\Controller\DefaultController::userIndex
+    methods: GET
+
+rapsys_air_user_view:
+    path:
+        en_gb: '/en/user/{id<\d+>}/{slug<[\w-]+>?}'
+        fr_fr: '/utilisateur/{id<\d+>}/{slug<[\w-]+>?}'
+    controller: Rapsys\BlogBundle\Controller\DefaultController::userView
+    methods: GET|POST
+
+rapsys_user_confirm:
+    path:
+        en_gb: '/en/confirm/{hash}/{mail}'
+        fr_fr: '/confirmer/{hash}/{mail}'
+    controller: Rapsys\UserBundle\Controller\DefaultController::confirm
+    requirements:
+        mail: '[a-zA-Z0-9=_-]+'
+        hash: '[a-zA-Z0-9=_-]+'
+    methods: GET|POST
+
+rapsys_user_edit:
+    path:
+        en_gb: '/en/user/{hash}/{mail}'
+        fr_fr: '/utilisateur/{hash}/{mail}'
+    controller: Rapsys\BlogBundle\Controller\UserController::edit
+    requirements:
+        mail: '[a-zA-Z0-9=_-]+'
+        hash: '[a-zA-Z0-9=_-]+'
+    methods: GET|POST
+
+rapsys_user_login:
+    path:
+        en_gb: '/en/login/{hash}/{mail}'
+        fr_fr: '/connecter/{hash}/{mail}'
+    controller: Rapsys\UserBundle\Controller\DefaultController::login
+    defaults:
+        mail: ~
+        hash: ~
+    requirements:
+        mail: '[a-zA-Z0-9=_-]+'
+        hash: '[a-zA-Z0-9=_-]+'
+    methods: GET|POST
+
+rapsys_user_logout:
+    path:
+        en_gb: '/en/logout'
+        fr_fr: '/deconnecter'
+    methods: GET
+
+rapsys_user_recover:
+    path:
+        en_gb: '/en/recover/{hash}/{pass}/{mail}'
+        fr_fr: '/recuperer/{hash}/{pass}/{mail}'
+    controller: Rapsys\UserBundle\Controller\DefaultController::recover
+    defaults:
+        mail: ~
+        pass: ~
+        hash: ~
+    requirements:
+        mail: '[a-zA-Z0-9=_-]+'
+        pass: '[a-zA-Z0-9=_-]+'
+        hash: '[a-zA-Z0-9=_-]+'
+    methods: GET|POST
+
+rapsys_user_register:
+    path:
+        en_gb: '/en/register/{hash}/{field}/{mail}'
+        fr_fr: '/enregistrer/{hash}/{field}/{mail}'
+    controller: Rapsys\UserBundle\Controller\DefaultController::register
+    defaults:
+        mail: ~
+        field: ~
+        hash: ~
+    requirements:
+        mail: '[a-zA-Z0-9=_-]+'
+        field: '[a-zA-Z0-9=_-]+'
+        hash: '[a-zA-Z0-9=_-]+'
+    methods: GET|POST
