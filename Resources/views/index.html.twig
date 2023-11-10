@@ -1,28 +1,45 @@
-{% extends 'RapsysBlogBundle::body.html.twig' %}
+{% extends '@RapsysBlog/_base.html.twig' %}
 {% block content %}
-<section id="content">
-	<h2><a href="{{ path('articles') }}">{% trans %}Articles list{% endtrans %}</a></h2>
-	{% for article in articles %}
-	<article>
+	<section id="content">
 		<header>
-			<h3><a href="{{ path('articles_article', {'_article': article.slug}) }}">{{article.title}}</a></h3>
-			<p>
-				<span>{% trans with {'%date%': article.created|localizeddate('full', 'short')} %}Published the %date%{% endtrans %}{% if article.created != article.updated %}{% trans with {'%date%': article.updated|localizeddate('short', 'short')} %}, edited the %date%{% endtrans %}{% endif %}</span>
-				{% if article.keywords %}
-					<span>
-						{% transchoice article.keywords|length %}{1} Keyword:|]1,Inf[ Keywords:{% endtranschoice %}
-						{% for slug, keyword in article.keywords %}
-							<a href="{{ path('keywords_keyword', {'_keyword': slug}) }}">{{ keyword }}</a>
-						{% endfor %}
-					</span>
-				{% endif %}
-			</p>
+			<h1 id="title"><a href="{{ head.canonical }}">{{ title }}</a></h1>
+			<p>{{ description }}</p>
 		</header>
-		<p>{{article.description}}</p>
-		<nav>
-			<a href="{{ path('articles_article', {'_article': article.slug}) }}">{% trans %}Read more{% endtrans %}...</a>
-		</nav>
-	</article>
-	{% endfor %}
-</section>
+		<section>
+			{% for article in articles %}
+				<article>
+					<header>
+						<h2><a href="{{ path('rapsys_blog_article_view', {'id': article.id, 'slug': article.slug}) }}">{{ article.title }}</a></h2>
+					</header>
+					<section>
+						<p>{{ article.description }}</p>
+						{% if article.keywords is defined and article.keywords %}
+							<nav>
+								{% for keyword in article.keywords %}
+									<a href="{{ path('rapsys_blog_keyword_view', {'id': keyword.id, 'slug': keyword.slug}) }}">{{ keyword.title }}</a>
+								{% endfor %}
+							</nav>
+						{% endif %}
+					</section>
+					<footer>
+						<nav>
+							<a href="{{ path('rapsys_blog_article_view', {'id': article.id, 'slug': article.slug}) }}">{% trans %}Read more{% endtrans %}...</a>
+						</nav>
+					</footer>
+				</article>
+			{% endfor %}
+		</section>
+		{% if articles_prev is defined or articles_next is defined %}
+			<footer>
+				<nav class="pager">
+					{% if articles_prev is defined %}
+						<a href="{{ articles_prev }}" rel="prev">&lt; {% trans %}Previous articles{% endtrans %}</a>
+					{% endif %}
+					{% if articles_next is defined %}
+						<a href="{{ articles_next }}" rel="next">{% trans %}Next articles{% endtrans %} &gt;</a>
+					{% endif %}
+				</nav>
+			</footer>
+		{% endif %}
+	</section>
 {% endblock %}
