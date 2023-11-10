@@ -7,19 +7,21 @@ Rapsys\BlogBundle\Entity\KeywordTranslation:
             type: integer
             options:
                 unsigned: true
-        language_id:
-            type: smallint
-            options:
-                unsigned: true
+        locale:
+            type: string
+            length: 5
     fields:
+        description:
+            type: text
+            nullable: true
         slug:
             type: string
             length: 128
+            nullable: true
         title:
             type: string
             length: 128
-        description:
-            type: text
+            nullable: true
         created:
             type: datetime
         updated:
@@ -28,9 +30,10 @@ Rapsys\BlogBundle\Entity\KeywordTranslation:
         keyword:
             targetEntity: Rapsys\BlogBundle\Entity\Keyword
             inversedBy: keyword_translations
-        language:
-            targetEntity: Rapsys\BlogBundle\Entity\Language
-            inversedBy: keyword_translations
+            joinColumn:
+                nullable: false
     uniqueConstraints:
-        slug_language:
-            columns: [ slug, language_id ]
+        locale_slug:
+            columns: [ locale, slug ]
+    lifecycleCallbacks:
+        preUpdate: ['preUpdate']
