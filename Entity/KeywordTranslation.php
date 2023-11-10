@@ -1,271 +1,239 @@
-<?php
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of the Rapsys BlogBundle package.
+ *
+ * (c) Raphaël Gertz <symfony@rapsys.eu>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Rapsys\BlogBundle\Entity;
+
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 /**
  * KeywordTranslation
  */
-class KeywordTranslation
-{
-    /**
-     * @var integer
-     */
-    private $keyword_id;
+class KeywordTranslation {
+	/**
+	 * @var int
+	 */
+	private int $keyword_id;
 
-    /**
-     * @var integer
-     */
-    private $language_id;
+	/**
+	 * @var string
+	 */
+	private string $locale;
 
-    /**
-     * @var string
-     */
-    private $title;
+	/**
+	 * @var ?string
+	 */
+	private ?string $description;
 
-    /**
-     * @var \DateTime
-     */
-    private $created;
+	/**
+	 * @var ?string
+	 */
+	private ?string $slug;
 
-    /**
-     * @var \DateTime
-     */
-    private $updated;
+	/**
+	 * @var ?string
+	 */
+	private ?string $title;
 
-    /**
-     * @var \Rapsys\BlogBundle\Entity\Keyword
-     */
-    private $keyword;
+	/**
+	 * @var \DateTime
+	 */
+	private \DateTime $created;
 
-    /**
-     * @var \Rapsys\BlogBundle\Entity\Language
-     */
-    private $language;
+	/**
+	 * @var \DateTime
+	 */
+	private \DateTime $updated;
 
+	/**
+	 * @var \Rapsys\BlogBundle\Entity\Keyword
+	 */
+	private Keyword $keyword;
 
-    /**
-     * Set keywordId
-     *
-     * @param integer $keywordId
-     *
-     * @return KeywordTranslation
-     */
-    public function setKeywordId($keywordId)
-    {
-        $this->keyword_id = $keywordId;
+	/**
+	 * Constructor
+	 */
+	public function __construct(Keyword $keyword, string $locale, ?string $description = null, ?string $slug = null, ?string $title = null) {
+		//Set defaults
+		$this->locale = $locale;
+		$this->description = $description;
+		$this->slug = $slug;
+		$this->title = $title;
+		$this->created = new \DateTime('now');
+		$this->updated = new \DateTime('now');
+		$this->setKeyword($keyword);
+	}
 
-        return $this;
-    }
+	/**
+	 * Get locale
+	 *
+	 * @return string
+	 */
+	public function getLocale(): string {
+		return $this->locale;
+	}
 
-    /**
-     * Get keywordId
-     *
-     * @return integer
-     */
-    public function getKeywordId()
-    {
-        return $this->keyword_id;
-    }
+	/**
+	 * Set locale
+	 *
+	 * @param string $locale
+	 *
+	 * @return KeywordTranslation
+	 */
+	public function setLocale(string $locale): KeywordTranslation {
+		$this->locale = $locale;
 
-    /**
-     * Set languageId
-     *
-     * @param integer $languageId
-     *
-     * @return KeywordTranslation
-     */
-    public function setLanguageId($languageId)
-    {
-        $this->language_id = $languageId;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get description
+	 *
+	 * @return ?string
+	 */
+	public function getDescription(): ?string {
+		return $this->description;
+	}
 
-    /**
-     * Get languageId
-     *
-     * @return integer
-     */
-    public function getLanguageId()
-    {
-        return $this->language_id;
-    }
+	/**
+	 * Set description
+	 *
+	 * @param ?string $description
+	 *
+	 * @return KeywordTranslation
+	 */
+	public function setDescription(?string $description): KeywordTranslation {
+		$this->description = $description;
 
-    /**
-     * Set title
-     *
-     * @param string $title
-     *
-     * @return KeywordTranslation
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get slug
+	 *
+	 * @return ?string
+	 */
+	public function getSlug(): ?string {
+		return $this->slug;
+	}
 
-    /**
-     * Get title
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
+	/**
+	 * Set slug
+	 *
+	 * @param ?string $slug
+	 *
+	 * @return KeywordTranslation
+	 */
+	public function setSlug(?string $slug): KeywordTranslation {
+		$this->slug = $slug;
 
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     *
-     * @return KeywordTranslation
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get title
+	 *
+	 * @return ?string
+	 */
+	public function getTitle(): ?string {
+		return $this->title;
+	}
 
-    /**
-     * Get created
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
+	/**
+	 * Set title
+	 *
+	 * @param ?string $title
+	 *
+	 * @return KeywordTranslation
+	 */
+	public function setTitle(?string $title): KeywordTranslation {
+		$this->title = $title;
 
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return KeywordTranslation
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get created
+	 *
+	 * @return \DateTime
+	 */
+	public function getCreated(): \DateTime {
+		return $this->created;
+	}
 
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
+	/**
+	 * Set created
+	 *
+	 * @param \DateTime $created
+	 *
+	 * @return KeywordTranslation
+	 */
+	public function setCreated(\DateTime $created): KeywordTranslation {
+		$this->created = $created;
 
-    /**
-     * Set keyword
-     *
-     * @param \Rapsys\BlogBundle\Entity\Keyword $keyword
-     *
-     * @return KeywordTranslation
-     */
-    public function setKeyword(\Rapsys\BlogBundle\Entity\Keyword $keyword = null)
-    {
-        $this->keyword = $keyword;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get updated
+	 *
+	 * @return \DateTime
+	 */
+	public function getUpdated(): \DateTime {
+		return $this->updated;
+	}
 
-    /**
-     * Get keyword
-     *
-     * @return \Rapsys\BlogBundle\Entity\Keyword
-     */
-    public function getKeyword()
-    {
-        return $this->keyword;
-    }
+	/**
+	 * Set updated
+	 *
+	 * @param \DateTime $updated
+	 *
+	 * @return KeywordTranslation
+	 */
+	public function setUpdated(\DateTime $updated): KeywordTranslation {
+		$this->updated = $updated;
 
-    /**
-     * Set language
-     *
-     * @param \Rapsys\BlogBundle\Entity\Language $language
-     *
-     * @return KeywordTranslation
-     */
-    public function setLanguage(\Rapsys\BlogBundle\Entity\Language $language = null)
-    {
-        $this->language = $language;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get keyword
+	 *
+	 * @return \Rapsys\BlogBundle\Entity\Keyword
+	 */
+	public function getKeyword(): Keyword {
+		return $this->keyword;
+	}
 
-    /**
-     * Get language
-     *
-     * @return \Rapsys\BlogBundle\Entity\Language
-     */
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-    /**
-     * @var string
-     */
-    private $slug;
+	/**
+	 * Set keyword
+	 *
+	 * @param \Rapsys\BlogBundle\Entity\Keyword $keyword
+	 *
+	 * @return KeywordTranslation
+	 */
+	public function setKeyword(Keyword $keyword): KeywordTranslation {
+		$this->keyword = $keyword;
+		$this->keyword_id = $keyword->getId();
 
+		return $this;
+	}
 
-    /**
-     * Set slug
-     *
-     * @param string $slug
-     *
-     * @return KeywordTranslation
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-    /**
-     * @var string
-     */
-    private $description;
-
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return KeywordTranslation
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function preUpdate(PreUpdateEventArgs $eventArgs): ?KeywordTranslation {
+		//Check that we have an snippet instance
+		if (($entity = $eventArgs->getEntity()) instanceof KeywordTranslation) {
+			//Set updated value
+			return $entity->setUpdated(new \DateTime('now'));
+		}
+	}
 }
