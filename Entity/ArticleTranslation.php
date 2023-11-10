@@ -1,300 +1,267 @@
-<?php
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of the Rapsys BlogBundle package.
+ *
+ * (c) Raphaël Gertz <symfony@rapsys.eu>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Rapsys\BlogBundle\Entity;
+
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 /**
  * ArticleTranslation
  */
-class ArticleTranslation
-{
-    /**
-     * @var integer
-     */
-    private $article_id;
+class ArticleTranslation {
+	/**
+	 * @var int
+	 */
+	private int $article_id;
 
-    /**
-     * @var integer
-     */
-    private $language_id;
+	/**
+	 * @var string
+	 */
+	private string $locale;
 
-    /**
-     * @var string
-     */
-    private $title;
+	/**
+	 * @var ?string
+	 */
+	private ?string $body;
 
-    /**
-     * @var string
-     */
-    private $description;
+	/**
+	 * @var ?string
+	 */
+	private ?string $description;
 
-    /**
-     * @var string
-     */
-    private $body;
+	/**
+	 * @var ?string
+	 */
+	private ?string $slug;
 
-    /**
-     * @var \DateTime
-     */
-    private $created;
+	/**
+	 * @var ?string
+	 */
+	private ?string $title;
 
-    /**
-     * @var \DateTime
-     */
-    private $updated;
+	/**
+	 * @var \DateTime
+	 */
+	private \DateTime $created;
 
-    /**
-     * @var \Rapsys\BlogBundle\Entity\Article
-     */
-    private $article;
+	/**
+	 * @var \DateTime
+	 */
+	private \DateTime $updated;
 
-    /**
-     * @var \Rapsys\BlogBundle\Entity\Language
-     */
-    private $language;
+	/**
+	 * @var \Rapsys\BlogBundle\Entity\Article
+	 */
+	private Article $article;
 
+	/**
+	 * Constructor
+	 */
+	public function __construct(Article $article, string $locale, ?string $body = null, ?string $description = null, ?string $slug = null, ?string $title = null) {
+		//Set defaults
+		$this->locale = $locale;
+		$this->body = $body;
+		$this->description = $description;
+		$this->slug = $slug;
+		$this->title = $title;
+		$this->created = new \DateTime('now');
+		$this->updated = new \DateTime('now');
+		$this->setArticle($article);
+	}
 
-    /**
-     * Set articleId
-     *
-     * @param integer $articleId
-     *
-     * @return ArticleTranslation
-     */
-    public function setArticleId($articleId)
-    {
-        $this->article_id = $articleId;
+	/**
+	 * Get locale
+	 *
+	 * @return string
+	 */
+	public function getLocale(): string {
+		return $this->locale;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set locale
+	 *
+	 * @param string $locale
+	 *
+	 * @return ArticleTranslation
+	 */
+	public function setLocale(string $locale): ArticleTranslation {
+		$this->locale = $locale;
 
-    /**
-     * Get articleId
-     *
-     * @return integer
-     */
-    public function getArticleId()
-    {
-        return $this->article_id;
-    }
+		return $this;
+	}
 
-    /**
-     * Set languageId
-     *
-     * @param integer $languageId
-     *
-     * @return ArticleTranslation
-     */
-    public function setLanguageId($languageId)
-    {
-        $this->language_id = $languageId;
+	/**
+	 * Get body
+	 *
+	 * @return ?string
+	 */
+	public function getBody(): ?string {
+		return $this->body;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set body
+	 *
+	 * @param ?string $body
+	 *
+	 * @return ArticleTranslation
+	 */
+	public function setBody(?string $body): ArticleTranslation {
+		$this->body = $body;
 
-    /**
-     * Get languageId
-     *
-     * @return integer
-     */
-    public function getLanguageId()
-    {
-        return $this->language_id;
-    }
+		return $this;
+	}
 
-    /**
-     * Set title
-     *
-     * @param string $title
-     *
-     * @return ArticleTranslation
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
+	/**
+	 * Get description
+	 *
+	 * @return ?string
+	 */
+	public function getDescription(): ?string {
+		return $this->description;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set description
+	 *
+	 * @param ?string $description
+	 *
+	 * @return ArticleTranslation
+	 */
+	public function setDescription(?string $description): ArticleTranslation {
+		$this->description = $description;
 
-    /**
-     * Get title
-     *
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
+		return $this;
+	}
 
-    /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return ArticleTranslation
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
+	/**
+	 * Get slug
+	 *
+	 * @return ?string
+	 */
+	public function getSlug(): ?string {
+		return $this->slug;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set slug
+	 *
+	 * @param ?string $slug
+	 *
+	 * @return ArticleTranslation
+	 */
+	public function setSlug(?string $slug): ArticleTranslation {
+		$this->slug = $slug;
 
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
+		return $this;
+	}
 
-    /**
-     * Set body
-     *
-     * @param string $body
-     *
-     * @return ArticleTranslation
-     */
-    public function setBody($body)
-    {
-        $this->body = $body;
+	/**
+	 * Get title
+	 *
+	 * @return ?string
+	 */
+	public function getTitle(): ?string {
+		return $this->title;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set title
+	 *
+	 * @param ?string $title
+	 *
+	 * @return ArticleTranslation
+	 */
+	public function setTitle(?string $title): ArticleTranslation {
+		$this->title = $title;
 
-    /**
-     * Get body
-     *
-     * @return string
-     */
-    public function getBody()
-    {
-        return $this->body;
-    }
+		return $this;
+	}
 
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     *
-     * @return ArticleTranslation
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
+	/**
+	 * Get created
+	 *
+	 * @return \DateTime
+	 */
+	public function getCreated(): \DateTime {
+		return $this->created;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set created
+	 *
+	 * @param \DateTime $created
+	 *
+	 * @return ArticleTranslation
+	 */
+	public function setCreated(\DateTime $created): ArticleTranslation {
+		$this->created = $created;
 
-    /**
-     * Get created
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
+		return $this;
+	}
 
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return ArticleTranslation
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
+	/**
+	 * Get updated
+	 *
+	 * @return \DateTime
+	 */
+	public function getUpdated(): \DateTime {
+		return $this->updated;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set updated
+	 *
+	 * @param \DateTime $updated
+	 *
+	 * @return ArticleTranslation
+	 */
+	public function setUpdated(\DateTime $updated): ArticleTranslation {
+		$this->updated = $updated;
 
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
+		return $this;
+	}
 
-    /**
-     * Set article
-     *
-     * @param \Rapsys\BlogBundle\Entity\Article $article
-     *
-     * @return ArticleTranslation
-     */
-    public function setArticle(\Rapsys\BlogBundle\Entity\Article $article = null)
-    {
-        $this->article = $article;
+	/**
+	 * Get article
+	 *
+	 * @return \Rapsys\BlogBundle\Entity\Article
+	 */
+	public function getArticle(): Article {
+		return $this->article;
+	}
 
-        return $this;
-    }
+	/**
+	 * Set article
+	 *
+	 * @param \Rapsys\BlogBundle\Entity\Article $article
+	 *
+	 * @return ArticleTranslation
+	 */
+	public function setArticle(Article $article): ArticleTranslation {
+		$this->article = $article;
+		$this->article_id = $article->getId();
 
-    /**
-     * Get article
-     *
-     * @return \Rapsys\BlogBundle\Entity\Article
-     */
-    public function getArticle()
-    {
-        return $this->article;
-    }
+		return $this;
+	}
 
-    /**
-     * Set language
-     *
-     * @param \Rapsys\BlogBundle\Entity\Language $language
-     *
-     * @return ArticleTranslation
-     */
-    public function setLanguage(\Rapsys\BlogBundle\Entity\Language $language = null)
-    {
-        $this->language = $language;
-
-        return $this;
-    }
-
-    /**
-     * Get language
-     *
-     * @return \Rapsys\BlogBundle\Entity\Language
-     */
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-    /**
-     * @var string
-     */
-    private $slug;
-
-
-    /**
-     * Set slug
-     *
-     * @param string $slug
-     *
-     * @return ArticleTranslation
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function preUpdate(PreUpdateEventArgs $eventArgs): ?ArticleTranslation {
+		//Check that we have an snippet instance
+		if (($entity = $eventArgs->getEntity()) instanceof ArticleTranslation) {
+			//Set updated value
+			return $entity->setUpdated(new \DateTime('now'));
+		}
+	}
 }
