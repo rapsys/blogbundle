@@ -1,241 +1,216 @@
-<?php
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of the Rapsys BlogBundle package.
+ *
+ * (c) Raphaël Gertz <symfony@rapsys.eu>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Rapsys\BlogBundle\Entity;
+
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 /**
  * Article
  */
-class Article
-{
-    /**
-     * @var integer
-     */
-    private $id;
+class Article {
+	/**
+	 * @var int
+	 */
+	private ?int $id;
 
-    /**
-     * @var \DateTime
-     */
-    private $created;
+	/**
+	 * @var \DateTime
+	 */
+	private \DateTime $created;
 
-    /**
-     * @var \DateTime
-     */
-    private $updated;
+	/**
+	 * @var \DateTime
+	 */
+	private \DateTime $updated;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $article_translations;
+	/**
+	 * @var \Rapsys\BlogBundle\Entity\User
+	 */
+	private User $user;
 
-    /**
-     * @var \Rapsys\BlogBundle\Entity\Site
-     */
-    private $site;
+	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 */
+	private Collection $article_translations;
 
-    /**
-     * @var \Rapsys\BlogBundle\Entity\Author
-     */
-    private $author;
+	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 */
+	private Collection $keywords;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $keywords;
+	/**
+	 * Constructor
+	 *
+	 * @param \Rapsys\BlogBundle\Entity\User $user
+	 */
+	public function __construct(User $user) {
+		$this->created = new \DateTime('now');
+		$this->updated = new \DateTime('now');
+		$this->user = $user;
+		$this->article_translations = new ArrayCollection();
+		$this->keywords = new ArrayCollection();
+	}
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->article_translations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->keywords = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+	/**
+	 * Get id
+	 *
+	 * @return ?int
+	 */
+	public function getId(): ?int {
+		return $this->id;
+	}
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+	/**
+	 * Set created
+	 *
+	 * @param \DateTime $created
+	 *
+	 * @return Article
+	 */
+	public function setCreated(\DateTime $created): Article {
+		$this->created = $created;
 
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     *
-     * @return Article
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get created
+	 *
+	 * @return \DateTime
+	 */
+	public function getCreated(): \DateTime {
+		return $this->created;
+	}
 
-    /**
-     * Get created
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
+	/**
+	 * Set updated
+	 *
+	 * @param \DateTime $updated
+	 *
+	 * @return Article
+	 */
+	public function setUpdated(\DateTime $updated): Article {
+		$this->updated = $updated;
 
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     *
-     * @return Article
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get updated
+	 *
+	 * @return \DateTime
+	 */
+	public function getUpdated(): \DateTime {
+		return $this->updated;
+	}
 
-    /**
-     * Get updated
-     *
-     * @return \DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
+	/**
+	 * Set user
+	 *
+	 * @param \Rapsys\BlogBundle\Entity\User $user
+	 *
+	 * @return Article
+	 */
+	public function setUser(User $user): Article {
+		$this->user = $user;
 
-    /**
-     * Add articleTranslation
-     *
-     * @param \Rapsys\BlogBundle\Entity\ArticleTranslation $articleTranslation
-     *
-     * @return Article
-     */
-    public function addArticleTranslation(\Rapsys\BlogBundle\Entity\ArticleTranslation $articleTranslation)
-    {
-        $this->article_translations[] = $articleTranslation;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Get user
+	 *
+	 * @return \Rapsys\BlogBundle\Entity\User
+	 */
+	public function getUser(): User {
+		return $this->user;
+	}
 
-    /**
-     * Remove articleTranslation
-     *
-     * @param \Rapsys\BlogBundle\Entity\ArticleTranslation $articleTranslation
-     */
-    public function removeArticleTranslation(\Rapsys\BlogBundle\Entity\ArticleTranslation $articleTranslation)
-    {
-        $this->article_translations->removeElement($articleTranslation);
-    }
+	/**
+	 * Add article translation
+	 *
+	 * @param \Rapsys\BlogBundle\Entity\ArticleTranslation $articleTranslation
+	 *
+	 * @return Article
+	 */
+	public function addArticleTranslation(ArticleTranslation $articleTranslation): Article {
+		$this->article_translations[] = $articleTranslation;
 
-    /**
-     * Get articleTranslations
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getArticleTranslations()
-    {
-        return $this->article_translations;
-    }
+		return $this;
+	}
 
-    /**
-     * Set site
-     *
-     * @param \Rapsys\BlogBundle\Entity\Site $site
-     *
-     * @return Article
-     */
-    public function setSite(\Rapsys\BlogBundle\Entity\Site $site = null)
-    {
-        $this->site = $site;
+	/**
+	 * Remove article translation
+	 *
+	 * @param \Rapsys\BlogBundle\Entity\ArticleTranslation $articleTranslation
+	 *
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function removeArticleTranslation(ArticleTranslation $articleTranslation): Collection {
+		return $this->article_translations->removeElement($articleTranslation);
+	}
 
-        return $this;
-    }
+	/**
+	 * Get article translations
+	 *
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function getArticleTranslations(): Collection {
+		return $this->article_translations;
+	}
 
-    /**
-     * Get site
-     *
-     * @return \Rapsys\BlogBundle\Entity\Site
-     */
-    public function getSite()
-    {
-        return $this->site;
-    }
+	/**
+	 * Add keyword
+	 *
+	 * @param \Rapsys\BlogBundle\Entity\Keyword $keyword
+	 *
+	 * @return Article
+	 */
+	public function addKeyword(Keyword $keyword): Article {
+		$this->keywords[] = $keyword;
 
-    /**
-     * Set author
-     *
-     * @param \Rapsys\BlogBundle\Entity\Author $author
-     *
-     * @return Article
-     */
-    public function setAuthor(\Rapsys\BlogBundle\Entity\Author $author = null)
-    {
-        $this->author = $author;
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Remove keyword
+	 *
+	 * @param \Rapsys\BlogBundle\Entity\Keyword $keyword
+	 *
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function removeKeyword(Keyword $keyword): Collection {
+		return $this->keywords->removeElement($keyword);
+	}
 
-    /**
-     * Get author
-     *
-     * @return \Rapsys\BlogBundle\Entity\Author
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
+	/**
+	 * Get keywords
+	 *
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function getKeywords(): Collection {
+		return $this->keywords;
+	}
 
-    /**
-     * Add keyword
-     *
-     * @param \Rapsys\BlogBundle\Entity\Keyword $keyword
-     *
-     * @return Article
-     */
-    public function addKeyword(\Rapsys\BlogBundle\Entity\Keyword $keyword)
-    {
-        $this->keywords[] = $keyword;
-
-        return $this;
-    }
-
-    /**
-     * Remove keyword
-     *
-     * @param \Rapsys\BlogBundle\Entity\Keyword $keyword
-     */
-    public function removeKeyword(\Rapsys\BlogBundle\Entity\Keyword $keyword)
-    {
-        $this->keywords->removeElement($keyword);
-    }
-
-    /**
-     * Get keywords
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getKeywords()
-    {
-        return $this->keywords;
-    }
-
-    /**
-     * Set id
-     *
-     * @param integer $id
-     *
-     * @return Article
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function preUpdate(PreUpdateEventArgs $eventArgs): ?Article {
+		//Check that we have an snippet instance
+		if (($entity = $eventArgs->getEntity()) instanceof Article) {
+			//Set updated value
+			return $entity->setUpdated(new \DateTime('now'));
+		}
+	}
 }
