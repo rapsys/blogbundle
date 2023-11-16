@@ -15,21 +15,23 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseAbstractController;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Asset\PackageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 use Rapsys\BlogBundle\Entity\Dance;
@@ -105,6 +107,9 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 	///Slugger util instance
 	protected SluggerUtil $slugger;
 
+	///Security instance
+	protected Security $security;
+
 	///RequestStack instance
 	protected RequestStack $stack;
 
@@ -129,6 +134,7 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 	 * @param PackageInterface $package The package instance
 	 * @param RouterInterface $router The router instance
 	 * @param SluggerUtil $slugger The slugger instance
+	 * @param Security $security The security instance
 	 * @param RequestStack $stack The stack instance
 	 * @param TranslatorInterface $translator The translator instance
 	 * @param Environment $twig The twig environment instance
@@ -137,7 +143,7 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 	 * @TODO move all that stuff to setSlugger('@slugger') setters with a calls: [ setSlugger: [ '@slugger' ] ] to unbload classes ???
 	 * @TODO add a calls: [ ..., prepare: ['@???'] ] that do all the logic that can't be done in constructor because various things are not available
 	 */
-	public function __construct(AuthorizationCheckerInterface $checker, ContainerInterface $container, AccessDecisionManagerInterface $decision, ManagerRegistry $doctrine, FacebookUtil $facebook, FormFactoryInterface $factory, ImageUtil $image, MailerInterface $mailer, EntityManagerInterface $manager, PackageInterface $package, RouterInterface $router, SluggerUtil $slugger, RequestStack $stack, TranslatorInterface $translator, Environment $twig, int $limit = 5) {
+	public function __construct(AuthorizationCheckerInterface $checker, ContainerInterface $container, AccessDecisionManagerInterface $decision, ManagerRegistry $doctrine, FacebookUtil $facebook, FormFactoryInterface $factory, ImageUtil $image, MailerInterface $mailer, EntityManagerInterface $manager, PackageInterface $package, RouterInterface $router, SluggerUtil $slugger, Security $security, RequestStack $stack, TranslatorInterface $translator, Environment $twig, int $limit = 5) {
 		//Set checker
 		$this->checker = $checker;
 
@@ -179,6 +185,9 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 
 		//Set slugger
 		$this->slugger = $slugger;
+
+		//Set security
+		$this->security = $security;
 
 		//Set stack
 		$this->stack = $stack;
@@ -293,7 +302,7 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 	 */
 	protected function render(string $view, array $parameters = [], Response $response = null): Response {
 		//Create response when null
-        $response ??= new Response();
+		$response ??= new Response();
 
 		//Without alternates
 		if (empty($parameters['head']['alternates'])) {
@@ -415,20 +424,20 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 		$content = $this->twig->render($view, $parameters);
 
 		//Invalidate OK response on invalid form
-        if (200 === $response->getStatusCode()) {
-            foreach ($parameters as $v) {
-                if ($v instanceof FormInterface && $v->isSubmitted() && !$v->isValid()) {
-                    $response->setStatusCode(422);
-                    break;
-                }
-            }
-        }
+		if (200 === $response->getStatusCode()) {
+			foreach ($parameters as $v) {
+				if ($v instanceof FormInterface && $v->isSubmitted() && !$v->isValid()) {
+					$response->setStatusCode(422);
+					break;
+				}
+			}
+		}
 
 		//Store content in response
-        $response->setContent($content);
+		$response->setContent($content);
 
 		//Return response
-        return $response;
+		return $response;
 	}
 
 	/**
@@ -451,9 +460,29 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 			'rapsys_pack.path_package' => PackageInterface::class,
 			'router' => RouterInterface::class,
 			'rapsys_pack.slugger_util' => SluggerUtil::class,
-			'request_stack' => RequestStack::class,
+			'security' => Security::class,
+			'stack' => RequestStack::class,
 			'translator' => TranslatorInterface::class,
 			'twig' => Environment::class,
 		];
+	}
+
+	/**
+	 * Get a user from the Security Helper.
+	 *
+	 * @throws \LogicException If SecurityBundle is not available
+	 *
+	 * @see TokenInterface::getUser()
+	 * @see https://github.com/symfony/symfony/issues/44735
+	 * @see vendor/symfony/framework-bundle/Controller/AbstractController.php
+	 */
+	protected function getUser(): ?UserInterface {
+		//Without token
+		if (null === ($token = $this->security->getToken())) {
+			return null;
+		}
+
+		//With token
+		return $token->getUser();
 	}
 }
