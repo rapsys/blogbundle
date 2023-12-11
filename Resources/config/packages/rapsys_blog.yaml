@@ -98,11 +98,10 @@ rapsys_user:
             site: '%rapsys_blog.title%'
     #Edit replacement
     edit:
-        #field:
-            #mail: false
-            #password: false
-            #pseudonym: false
-            #slug: false
+        admin:
+            mail: true
+            pseudonym: true
+            slug: true
         route:
             index: 'root'
         view:
