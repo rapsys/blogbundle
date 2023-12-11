@@ -13,11 +13,6 @@ namespace Rapsys\BlogBundle\Fixture;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 
 use Rapsys\PackBundle\Util\SluggerUtil;
 
@@ -30,29 +25,21 @@ use Rapsys\BlogBundle\Entity\KeywordTranslation;
 use Rapsys\BlogBundle\Entity\Article;
 use Rapsys\BlogBundle\Entity\ArticleTranslation;
 
-#use Rapsys\AirBundle\Entity\Location;
-#use Rapsys\AirBundle\Entity\Slot;
-
-class BlogFixture extends Fixture implements ContainerAwareInterface {
-	/**
-	 * @var ContainerInterface
-	 */
-	private ContainerInterface $container;
-
-	/**
-	 * @var PasswordHasherFactory
-	 */
-	private PasswordHasherFactory $hasher;
-
+/**
+ * {@inheritDoc}
+ */
+class BlogFixture extends Fixture {
 	/**
 	 * @var Rapsys\PackBundle\Util\SluggerUtil
 	 */
 	private SluggerUtil $slugger;
 
-	public function setContainer(ContainerInterface $container = null) {
-		$this->container = $container;
-		$this->hasher = $container->get('security.password_hasher_factory');
-		$this->slugger = $container->get('rapsys_pack.slugger_util');
+	/**
+	 * Constructor
+	 */
+	public function __construct(SluggerUtil $slugger) {
+		//Set slugger
+		$this->slugger = $slugger;
 	}
 
 	/**
@@ -104,7 +91,7 @@ class BlogFixture extends Fixture implements ContainerAwareInterface {
 				'forename' => 'Raphaël',
 				'surname' => 'Gertz',
 				'active' => true,
-				'disabled' => false,
+				'enable' => false,
 				'pseudonym' => 'Rapsys',
 				'slug' => $this->slugger->slug('Raphaël Gertz (rapsys)'),
 				'translations' => [
@@ -117,8 +104,7 @@ class BlogFixture extends Fixture implements ContainerAwareInterface {
 		//Create users
 		$users = [];
 		foreach($userTree as $userData) {
-			$user = new User($userData['mail'], $userData['password'], $civilitys[$userData['civility']], $userData['forename'], $userData['surname'], $userData['active'], $userData['disabled'], $userData['pseudonym'], $userData['slug']);
-			#$user->setPassword($this->hasher->hashPassword($user, $userData['password']));
+			$user = new User($userData['mail'], $userData['password'], $civilitys[$userData['civility']], $userData['forename'], $userData['surname'], $userData['active'], $userData['enable'], $userData['pseudonym'], $userData['slug']);
 			$user->addGroup($groups[$userData['group']]);
 			$manager->persist($user);
 			//Flush to get the id
