@@ -1,0 +1,44 @@
+{% extends '@RapsysBlog/_base.html.twig' %}
+{% block head %}
+	<meta charset="UTF-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	{% if head.locale is defined and head.locale %}<meta http-equiv="Content-Language" content="{{ head.locale }}" />{% endif %}
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>{{ subject }}</title>
+	<style type="text/css">
+		body {background:white;color:#222}
+		a {text-decoration:none;color:#15c}
+		a:hover {text-decoration:underline}
+		a.link {word-break:break-all;font-size:1.5rem}
+		h1 {margin: .5rem;font-size: 2rem}
+		table {width: 100%;border-radius: .5rem}
+		thead {border-top:.5rem solid #09c;background:#cff}
+		thead th {text-align:center}
+		tbody {border-top:.5rem solid #09c;background:#cff}
+		tbody td {margin:.5rem 0;padding:0 .5rem}
+		tfoot {border-top:.5rem solid #09c;background:#cff}
+		tfoot td {text-align:center}
+		tfoot summary:after {display:none}
+		tfoot summary::-webkit-details-marker {display:none}
+	</style>
+{% endblock %}
+{% block links %}{% endblock %}
+{% block header %}
+	<table>
+		<thead>
+			<tr>
+				{#<th><a href="{{ url(head.root) }}" title="{{ head.site }}"><img src="{{ source(head.logo.png)|data_uri }}" alt="{{ head.logo.alt }}" width="100" height="60" /></a></th>#}
+				<th><a href="{{ url(head.root) }}" title="{{ head.site }}"><img src="{{ email.image(head.logo.png) }}" alt="{{ head.logo.alt }}" width="100" height="60" /></a></th>
+				<th><h1><a href="{{ url(head.root) }}">{{ head.site }}</a></h1></th>
+			</tr>
+		</thead>
+{% endblock %}
+{% block message %}{% endblock %}
+{% block footer %}
+		<tfoot>
+			<tr>
+				<td colspan="2">{{ copy.long }} - {{ copy.short }}</td>
+			</tr>
+		</tfoot>
+	</table>
+{% endblock %}
