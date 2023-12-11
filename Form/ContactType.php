@@ -1,8 +1,16 @@
-<?php
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of the Rapsys BlogBundle package.
+ *
+ * (c) Raphaël Gertz <symfony@rapsys.eu>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Rapsys\BlogBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -12,23 +20,31 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ContactType extends AbstractType {
+use Rapsys\PackBundle\Form\CaptchaType;
+
+class ContactType extends CaptchaType {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function buildForm(FormBuilderInterface $builder, array $options) {
-		return $builder->add('name', TextType::class, array('attr' => array('placeholder' => 'Your name'), 'constraints' => array(new NotBlank(array("message" => "Please provide your name")))))
-			->add('subject', TextType::class, array('attr' => array('placeholder' => 'Subject'), 'constraints' => array(new NotBlank(array("message" => "Please give a Subject")))))
-			->add('email', EmailType::class, array('attr' => array('placeholder' => 'Your email address'), 'constraints' => array(new NotBlank(array("message" => "Please provide a valid email")),	new Email(array("message" => "Your email doesn't seems to be valid")))))
-			->add('message', TextareaType::class, array('attr' => array('placeholder' => 'Your message here', 'cols' => 50, 'rows' => 15), 'constraints' => array(new NotBlank(array("message" => "Please provide a message here")))))
-			->add('submit', SubmitType::class, array('label' => 'Send', 'attr' => array('class' => 'submit')));
+	public function buildForm(FormBuilderInterface $builder, array $options): void {
+		//Add fields
+		$builder
+			->add('name', TextType::class, ['attr' => ['placeholder' => 'Your name'], 'constraints' => [new NotBlank(['message' => 'Please provide your name'])]])
+			->add('subject', TextType::class, ['attr' => ['placeholder' => 'Subject'], 'constraints' => [new NotBlank(['message' => 'Please provide your subject'])]])
+			->add('mail', EmailType::class, ['attr' => ['placeholder' => 'Your mail'], 'constraints' => [new NotBlank(['message' => 'Please provide a valid mail']), new Email(['message' => 'Your mail doesn\'t seems to be valid'])]])
+			->add('message', TextareaType::class, ['attr' => ['placeholder' => 'Your message', 'cols' => 50, 'rows' => 15], 'constraints' => [new NotBlank(['message' => 'Please provide your message'])]])
+			->add('submit', SubmitType::class, ['label' => 'Send', 'attr' => ['class' => 'submit']]);
+
+		//Call parent
+		parent::buildForm($builder, $options);
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function setDefaultOptions(OptionsResolver $resolver) {
-		$resolver->setDefaults(array('error_bubbling' => true));
+	public function configureOptions(OptionsResolver $resolver): void {
+		//Set defaults
+		$resolver->setDefaults(['error_bubbling' => true]);
 	}
 
 	/**
