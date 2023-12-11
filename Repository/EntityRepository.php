@@ -114,6 +114,7 @@ class EntityRepository extends BaseEntityRepository {
 		$tables = [
 			//Set entities
 			'RapsysBlogBundle:ArticleKeyword' => $qs->getJoinTableName($manager->getClassMetadata('Rapsys\BlogBundle\Entity\Article')->getAssociationMapping('keywords'), $manager->getClassMetadata('Rapsys\BlogBundle\Entity\Article'), $dp),
+			'RapsysBlogBundle:UserGroup' => $qs->getJoinTableName($manager->getClassMetadata('Rapsys\BlogBundle\Entity\User')->getAssociationMapping('groups'), $manager->getClassMetadata('Rapsys\BlogBundle\Entity\User'), $dp),
 			'RapsysBlogBundle:ArticleTranslation' => $qs->getTableName($manager->getClassMetadata('Rapsys\BlogBundle\Entity\ArticleTranslation'), $dp),
 			'RapsysBlogBundle:KeywordTranslation' => $qs->getTableName($manager->getClassMetadata('Rapsys\BlogBundle\Entity\KeywordTranslation'), $dp),
 			'RapsysBlogBundle:UserTranslation' => $qs->getTableName($manager->getClassMetadata('Rapsys\BlogBundle\Entity\UserTranslation'), $dp),
