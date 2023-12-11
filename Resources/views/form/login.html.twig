@@ -1,0 +1,38 @@
+{% extends '@RapsysBlog/_base.html.twig' %}
+{% block content %}
+	<section class="form">
+		<header>
+			<h2><a href="{{ path('rapsys_user_login') }}">{{ title }}</a></h2>
+		</header>
+		<section>
+			{{ form_start(login) }}
+				{{ form_row(login.mail) }}
+
+				{{ form_row(login.password) }}
+
+				{{ form_row(login.submit) }}
+
+				{# Render CSRF token etc .#}
+				<footer style="display:none">{{ form_rest(login) }}</footer>
+			{{ form_end(login) }}
+		</section>
+	</section>
+	{% if recover is defined %}
+		<section class="form">
+			<header>
+				<h2><a href="{{ path('rapsys_user_recover') }}">{% trans %}Recover{% endtrans %}</a></h2>
+			</header>
+			<section>
+				{{ form_start(recover) }}
+
+					{{ form_row(recover.mail) }}
+
+					{{ form_row(recover.submit) }}
+
+					{# Render CSRF token etc .#}
+					<footer style="display:none">{{ form_rest(recover) }}</footer>
+				{{ form_end(recover) }}
+			</section>
+		</section>
+	{% endif %}
+{% endblock %}
