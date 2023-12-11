@@ -1,0 +1,12 @@
+{{ subject }}
+{% for i in range(1, subject|length) %}={% endfor %}
+
+
+*{{ 'Thanks so much for joining %head.site%, the blog program.'|trans({'%head.site%': head.site}) }}*
+
+{% trans %}To create your account you must follow this link:{% endtrans %}
+{{ confirm_url }}
+
+--
+
+{{ copy.long }} - {{ copy.short }}

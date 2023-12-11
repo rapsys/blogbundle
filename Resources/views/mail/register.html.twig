@@ -1,0 +1,14 @@
+{% extends '@RapsysBlog/mail/_base.html.twig' %}
+{% block content %}
+	<tbody>
+		<tr>
+			<td colspan="2">
+				<h2 title="{% trans %}Subject{% endtrans %}">{{ 'Welcome to %head.site%'|trans({'%head.site%': head.site}) }}</h2>
+				<h3>{% if recipient_name %}{{ 'Hi %recipient_name%,'|trans({'%recipient_name%': recipient_name}) }}{% else %}{% trans %}Hi,{% endtrans %}{% endif %}</h3>
+				<p>{{ 'Thanks so much for joining %head.site%, the blog program.'|trans({'%head.site%': head.site}) }}</p>
+				<p>{% trans %}To create your account you must follow this link:{% endtrans %}</p>
+				<p><a href="{{ confirm_url|escape('html_attr') }}">{{ confirm_url }}</a></p>
+			</td>
+		</tr>
+	</tbody>
+{% endblock %}
