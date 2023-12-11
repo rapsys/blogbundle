@@ -45,14 +45,14 @@ class User extends BaseUser {
 	 * @param ?Civility $civility The user civility
 	 * @param ?string $forename The user forename
 	 * @param ?string $surname The user surname
-	 * @param bool $active The user active
-	 * @param bool $disabled The user disabled
+	 * @param bool $active The user is active
+	 * @param bool $enable The user is enable
 	 * @param ?string $pseudonym The user pseudonym
 	 * @param ?string $slug The user slug
 	 */
-	public function __construct(string $mail, string $password, ?Civility $civility = null, ?string $forename = null, ?string $surname = null, bool $active = false, bool $disabled = false, ?string $pseudonym = null, ?string $slug = null) {
+	public function __construct(string $mail, string $password, ?Civility $civility = null, ?string $forename = null, ?string $surname = null, bool $active = false, bool $enable = true, ?string $pseudonym = null, ?string $slug = null) {
 		//Call parent constructor
-		parent::__construct($mail, $password, $civility, $forename, $surname, $active, $disabled);
+		parent::__construct($mail, $password, $civility, $forename, $surname, $active, $enable);
 
 		//Set defaults
 		$this->pseudonym = $pseudonym;
