@@ -34,19 +34,19 @@ class Configuration implements ConfigurationInterface {
 		//Set defaults
 		$defaults = [
 			'contact' => [
-				'name' => 'Rapsys blog',
-				'mail' => 'blog@rapsys.eu'
+				'address' => 'john.doe@example.com',
+				'name' => 'John Doe'
 			],
 			'copy' => [
 				'by' => 'Rapsys',
-				'link' => 'https://rapsys.eu',
+				'link' => 'https://example.com',
 				'long' => 'All rights reserved',
 				'short' => 'Copyright 2019-2023',
-				'title' => 'By Rapsys'
+				'title' => 'By Raphaël'
 			],
-			'donate' => 'https://paypal.me/milongaraphael',
+			'donate' => '',
 			'facebook' => [
-				'apps' => [ 3728770287223690 ],
+				'apps' => [],
 				'height' => 630,
 				'width' => 1200
 			],
@@ -96,21 +96,20 @@ class Configuration implements ConfigurationInterface {
 			//XXX: see https://github.com/symfony/symfony/issues/7405
 			//TODO: copy to '%rapsys_user.languages%',
 			'languages' => [
-				'en_gb' => 'English',
-				'fr_fr' => 'French'
+				'en_gb' => 'English'
 			],
 			//TODO: copy to '%kernel.default_locale%'
-			'locale' => 'fr_fr',
+			'locale' => 'en_gb',
 			//TODO: copy to '%kernel.translator.fallbacks%'
-			'locales' => [ 'fr_fr', 'en_gb' ],
+			'locales' => [ 'en_gb' ],
 			'logo' => [
 				'png' => '@RapsysBlog/png/logo.png',
 				'svg' => '@RapsysBlog/svg/logo.svg',
-				'alt' => 'Rapsys\' dev log logo'
+				'alt' => 'John Doe\'s blog logo'
 			],
 			'path' => is_link(($prefix = is_dir('public') ? './public/' : './').($link = 'bundles/'.str_replace('_', '', $alias))) && is_dir(realpath($prefix.$link)) || is_dir($prefix.$link) ? $link : dirname(__DIR__).'/Resources/public',
 			'root' => 'rapsys_blog',
-			'title' => 'Rapsys\' dev log',
+			'title' => 'John Doe\'s blog',
 		];
 
 		//Here we define the parameters that are allowed to configure the bundle.
@@ -127,8 +126,8 @@ class Configuration implements ConfigurationInterface {
 					->arrayNode('contact')
 						->addDefaultsIfNotSet()
 						->children()
+							->scalarNode('address')->cannotBeEmpty()->defaultValue($defaults['contact']['address'])->end()
 							->scalarNode('name')->cannotBeEmpty()->defaultValue($defaults['contact']['name'])->end()
-							->scalarNode('mail')->cannotBeEmpty()->defaultValue($defaults['contact']['mail'])->end()
 						->end()
 					->end()
 					->arrayNode('copy')
