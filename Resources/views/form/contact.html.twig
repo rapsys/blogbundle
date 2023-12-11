@@ -1,0 +1,31 @@
+{% extends '@RapsysBlog/_base.html.twig' %}
+{% block content %}
+	<section class="form">
+		<header>
+			<h1><a href="{{ head.canonical }}">{{ title }}</a></h1>
+			<p>{{ description }}</p>
+		</header>
+		<section>
+			{% if sent is defined and sent %}
+				<p>{% trans %}Your message has been sent{% endtrans %}</p>
+			{% else %}
+				{{ form_start(contact) }}
+					{{ form_row(contact.subject) }}
+
+					{{ form_row(contact.name) }}
+
+					{{ form_row(contact.mail) }}
+
+					{{ form_row(contact.message) }}
+
+					{{ form_row(contact.captcha) }}
+
+					{{ form_row(contact.submit) }}
+
+					{# Render CSRF token etc .#}
+					<div style="display:none">{{ form_rest(contact) }}</div>
+				{{ form_end(contact) }}
+			{% endif %}
+		</section>
+	</section>
+{% endblock %}
