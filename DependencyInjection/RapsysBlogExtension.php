@@ -27,7 +27,8 @@ class RapsysBlogExtension extends Extension implements PrependExtensionInterface
 	/**
 	 * Prepend the configuration
 	 *
-	 * @desc Preload the configuration to allow sourcing as parameters
+	 * Preload the configuration to allow sourcing as parameters
+	 *
 	 * {@inheritdoc}
 	 */
 	public function prepend(ContainerBuilder $container): void {
@@ -51,7 +52,7 @@ class RapsysBlogExtension extends Extension implements PrependExtensionInterface
 
 		//Store flattened array in parameters
 		//XXX: don't flatten rapsys_blog.icon.png key which is required to be an array
-		foreach($this->flatten($config, $this->getAlias(), 10, '.', ['rapsys_blog.icon.png', 'rapsys_blog.facebook.apps', 'rapsys_blog.locales', 'rapsys_blog.languages']) as $k => $v) {
+		foreach($this->flatten($config, $this->getAlias(), 10, '.', ['rapsys_blog.contact', 'rapsys_blog.copy', 'rapsys_blog.icon', 'rapsys_blog.icon.png', 'rapsys_blog.logo', 'rapsys_blog.facebook.apps', 'rapsys_blog.locales', 'rapsys_blog.languages']) as $k => $v) {
 			$container->setParameter($k, $v);
 		}
 	}
