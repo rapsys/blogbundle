@@ -50,73 +50,124 @@ use Rapsys\PackBundle\Util\SluggerUtil;
  * {@inheritdoc}
  */
 abstract class AbstractController extends BaseAbstractController implements ServiceSubscriberInterface {
-	///AuthorizationCheckerInterface instance
-	protected AuthorizationCheckerInterface $checker;
-
-	///Config array
+	/**
+	 * Config array
+	 */
 	protected array $config;
 
-	///Context array
+	/**
+	 * Context array
+	 */
 	protected array $context;
 
-	///AccessDecisionManagerInterface instance
-	protected AccessDecisionManagerInterface $decision;
-
-	///ManagerRegistry instance
-	protected ManagerRegistry $doctrine;
-
-	///FacebookUtil instance
-	protected FacebookUtil $facebook;
-
-	///FormFactoryInterface instance
-	protected FormFactoryInterface $factory;
-
-	///Image util instance
-	protected ImageUtil $image;
-
-	///Limit integer
+	/**
+	 * Limit integer
+	 */
 	protected int $limit;
 
-	///Locale string
+	/**
+	 * Locale string
+	 */
 	protected string $locale;
 
-	///MailerInterface instance
-	protected MailerInterface $mailer;
-
-	///EntityManagerInterface instance
-	protected EntityManagerInterface $manager;
-
-	///Modified DateTime
+	/**
+	 * Modified DateTime
+	 */
 	protected \DateTime $modified;
 
-	///PackageInterface instance
-	protected PackageInterface $package;
+	/**
+	 * Limit integer
+	 */
+	protected int $page;
 
-	///Request instance
-	protected Request $request;
-
-	///Route string
+	/**
+	 * Route string
+	 */
 	protected string $route;
 
-	///Route params array
+	/**
+	 * Route params array
+	 */
 	protected array $routeParams;
 
-	///Router instance
+	/**
+	 * AuthorizationCheckerInterface instance
+	 */
+	protected AuthorizationCheckerInterface $checker;
+
+	/**
+	 * AccessDecisionManagerInterface instance
+	 */
+	protected AccessDecisionManagerInterface $decision;
+
+	/**
+	 * ManagerRegistry instance
+	 */
+	protected ManagerRegistry $doctrine;
+
+	/**
+	 * FacebookUtil instance
+	 */
+	protected FacebookUtil $facebook;
+
+	/**
+	 * FormFactoryInterface instance
+	 */
+	protected FormFactoryInterface $factory;
+
+	/**
+	 * Image util instance
+	 */
+	protected ImageUtil $image;
+
+	/**
+	 * MailerInterface instance
+	 */
+	protected MailerInterface $mailer;
+
+	/**
+	 * EntityManagerInterface instance
+	 */
+	protected EntityManagerInterface $manager;
+
+	/**
+	 * PackageInterface instance
+	 */
+	protected PackageInterface $package;
+
+	/**
+	 * Request instance
+	 */
+	protected Request $request;
+
+	/**
+	 * Router instance
+	 */
 	protected RouterInterface $router;
 
-	///Slugger util instance
+	/**
+	 * Slugger util instance
+	 */
 	protected SluggerUtil $slugger;
 
-	///Security instance
+	/**
+	 * Security instance
+	 */
 	protected Security $security;
 
-	///RequestStack instance
+	/**
+	 * RequestStack instance
+	 */
 	protected RequestStack $stack;
 
-	///Translator instance
+	/**
+	 * Translator instance
+	 */
 	protected TranslatorInterface $translator;
 
-	///Twig\Environment instance
+	/**
+	 * Twig\Environment instance
+	 */
 	protected Environment $twig;
 
 	/**
@@ -199,7 +250,7 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 		$this->twig = $twig;
 
 		//Get main request
-		$this->request = $this->stack->getMainRequest();
+		$this->request = $this->stack->getCurrentRequest();
 
 		//Get current locale
 		$this->locale = $this->request->getLocale();
@@ -209,6 +260,14 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 
 		//Set alternates
 		$alternates = [];
+
+		//Get current page
+		$this->page = (int) $this->request->query->get('page');
+
+		//With negative page
+		if ($this->page < 0) {
+			$this->page = 0;
+		}
 
 		//Set route
 		//TODO: default to not found route ???
@@ -230,13 +289,6 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 
 		//Set the context
 		$this->context = [
-			//TODO: review the structure
-			#'title' => $this->translator->trans($this->config['title']),
-			#'og:site_name' => $this->translator->trans($this->config['title']),
-			#'site' => [
-			#	'donate' => $this->config['donate'],
-			#	'title' => $title = $this->translator->trans($this->config['site']['title']),
-			#],
 			'head' => [
 				'alternates' => $alternates,
 				'canonical' => $canonical,
@@ -249,6 +301,7 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 					'alt' => $this->translator->trans($this->config['logo']['alt'])
 				],
 				'root' => $this->config['root'],
+				'site' => $this->translator->trans($this->config['title']),
 				'title' => null,
 				'facebook' => [
 						'og:type' => 'article',
@@ -267,8 +320,8 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 				]
 			],
 			'contact' => [
-				'name' => $this->translator->trans($this->config['contact']['name']),
-				'mail' => $this->config['contact']['mail']
+				'address' => $this->config['contact']['address'],
+				'name' => $this->translator->trans($this->config['contact']['name'])
 			],
 			'copy' => [
 				'by' => $this->translator->trans($this->config['copy']['by']),
@@ -278,20 +331,9 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 				'title' => $this->config['copy']['title']
 			],
 			'forms' => [],
-			'title' => null,
 			'description' => null,
 			'section' => null,
-			'site' => [
-				'icon' => $this->config['icon'],
-				'logo' => [
-					'png' => $this->config['logo']['png'],
-					'svg' => $this->config['logo']['svg'],
-					'alt' => $this->translator->trans($this->config['logo']['alt'])
-				],
-				'path' => $this->config['path'],
-				'root' => $this->config['root'],
-				'title' => $this->translator->trans($this->config['title'])
-			]
+			'title' => null
 		];
 	}
 
@@ -370,11 +412,11 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 		//With empty head title and section
 		if (empty($parameters['head']['title']) && !empty($parameters['section'])) {
 			//Set head title
-			$parameters['head']['title'] = implode(' - ', [$parameters['title'], $parameters['section'], $this->translator->trans($this->config['title'])]);
+			$parameters['head']['title'] = implode(' - ', [$parameters['title'], $parameters['section'], $parameters['head']['site']]);
 		//With empty head title
 		} elseif (empty($parameters['head']['title'])) {
 			//Set head title
-			$parameters['head']['title'] = implode(' - ', [$parameters['title'], $this->translator->trans($this->config['title'])]);
+			$parameters['head']['title'] = implode(' - ', [$parameters['title'], $parameters['head']['site']]);
 		}
 
 		//With empty head description and description
@@ -465,24 +507,5 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 			'translator' => TranslatorInterface::class,
 			'twig' => Environment::class,
 		];
-	}
-
-	/**
-	 * Get a user from the Security Helper.
-	 *
-	 * @throws \LogicException If SecurityBundle is not available
-	 *
-	 * @see TokenInterface::getUser()
-	 * @see https://github.com/symfony/symfony/issues/44735
-	 * @see vendor/symfony/framework-bundle/Controller/AbstractController.php
-	 */
-	protected function getUser(): ?UserInterface {
-		//Without token
-		if (null === ($token = $this->security->getToken())) {
-			return null;
-		}
-
-		//With token
-		return $token->getUser();
 	}
 }
