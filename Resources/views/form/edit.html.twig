@@ -1,0 +1,78 @@
+{% extends '@RapsysBlog/_base.html.twig' %}
+{% block content %}
+	<section class="form">
+		<header>
+			<h2><a href="{{ head.canonical }}">{{ title }}</a></h2>
+		</header>
+		<section>
+			{% if disabled is defined and disabled %}
+				<p class="message error">{% trans %}Your account has been disabled{% endtrans %}</p>
+			{% elseif sent is defined and sent %}
+				<p class="message notice">{% trans %}Your verification mail has been sent, to activate your account you must follow the confirmation link inside{% endtrans %}</p>
+				<p class="message warning">{% trans %}If you did not receive a verification mail, check your Spam or Junk mail folders{% endtrans %}</p>
+			{% else %}
+				{{ form_start(edit) }}
+					{% if edit.mail is defined %}
+						{{ form_row(edit.mail) }}
+					{% endif %}
+
+					{% if edit.password is defined %}
+						{{ form_row(edit.password) }}
+					{% endif %}
+
+					{% if edit.civility is defined %}
+						{{ form_row(edit.civility) }}
+					{% endif %}
+
+					{% if edit.forename is defined %}
+						{{ form_row(edit.forename) }}
+					{% endif %}
+
+					{% if edit.surname is defined %}
+						{{ form_row(edit.surname) }}
+					{% endif %}
+
+					{% if edit.pseudonym is defined %}
+						{{ form_row(edit.pseudonym) }}
+					{% endif %}
+
+					{% if edit.slug is defined %}
+						{{ form_row(edit.slug) }}
+					{% endif %}
+
+					{% if edit.active is defined %}
+						{{ form_row(edit.active) }}
+					{% endif %}
+
+					{% if edit.enable is defined %}
+						{{ form_row(edit.enable) }}
+					{% endif %}
+
+					{{ form_row(edit.submit) }}
+
+					{# Render CSRF token etc .#}
+					<footer style="display:none">{{ form_rest(edit) }}</footer>
+				{{ form_end(edit) }}
+			{% endif %}
+		</section>
+	</section>
+	{% if reset is defined %}
+		<section class="form">
+			<header>
+				<h2><a href="{{ head.canonical }}">{{ password }}</a></h2>
+			</header>
+			<section>
+				{{ form_start(reset) }}
+					{% if reset.password is defined %}
+						{{ form_row(reset.password) }}
+					{% endif %}
+
+					{{ form_row(reset.submit) }}
+
+					{# Render CSRF token etc .#}
+					<footer style="display:none">{{ form_rest(reset) }}</footer>
+				{{ form_end(reset) }}
+			</section>
+		</section>
+	{% endif %}
+{% endblock %}
