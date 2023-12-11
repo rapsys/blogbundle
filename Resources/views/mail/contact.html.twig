@@ -1,13 +1,11 @@
 {% extends '@RapsysBlog/mail/_base.html.twig' %}
 {% block content %}
-	<table class="content">
+	<tbody>
 		<tr>
-			<td>&nbsp;</td>
-			<td>
+			<td colspan="2">
 				<h2 title="{% trans %}Subject{% endtrans %}">{{ subject }}</h2>
 				<p>{{ message|nl2br }}</p>
 			</td>
-			<td>&nbsp;</td>
 		</tr>
-	</table>
+	</tbody>
 {% endblock %}
