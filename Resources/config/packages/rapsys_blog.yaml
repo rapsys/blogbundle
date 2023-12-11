@@ -183,7 +183,7 @@ framework:
         headers:
             X-Originating-IP: '%env(REMOTE_ADDR)%'
     secret: '%env(APP_SECRET)%'
-    #csrf_protection: true
+    csrf_protection: true
     session:
         enabled: true
         handler_id: ~
@@ -200,8 +200,10 @@ security:
         #XXX: comment this key in config/security.yaml to prevent users_in_memory induced failures
         #TODO: see https://symfony.com/doc/current/security/passwords.html (sodium ? + upgrade)
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
-            algorithm: 'bcrypt'
+        #Rapsys\BlogBundle\Entity\User:
+            algorithm: 'sodium'
             migrate_from:
+                - 'bcrypt'
                 - 'plaintext'
 
     # Set providers
@@ -248,7 +250,6 @@ security:
                 # Password parameter
                 password_parameter: 'login[password]'
                 # Enable login csrf protection
-                #TODO: enable in framework now that it works here ?
                 enable_csrf: false
                 # Csrf parameter
                 csrf_parameter: 'login[_token]'
