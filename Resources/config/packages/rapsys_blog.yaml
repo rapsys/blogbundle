@@ -100,7 +100,6 @@ rapsys_user:
     edit:
         admin:
             mail: true
-            pseudonym: true
             slug: true
         route:
             index: 'root'
