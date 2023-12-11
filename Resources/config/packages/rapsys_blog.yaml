@@ -2,14 +2,14 @@
 #TODO: set mail, calendar and facebook app id as env variables ???
 rapsys_blog:
     contact:
+        address: 'blog@rapsys.eu'
         name: 'Raphaël Gertz'
-        mail: 'blog@rapsys.eu'
     copy:
         by: 'Rapsys'
         link: 'https://rapsys.eu'
         long: 'All rights reserved'
         short: 'Copyright 2019-2023'
-        title: 'Rapsys'
+        title: 'By Raphaël'
     donate: 'https://paypal.me/milongaraphael'
     facebook:
         #TODO: set this as env variables ???
@@ -58,11 +58,107 @@ rapsys_blog:
     locale: 'fr_fr'
     locales: [ 'fr_fr', 'en_gb' ]
     logo:
+        alt: 'Rapsys'' dev log logo'
         png: '@RapsysBlog/png/logo.png'
         svg: '@RapsysBlog/svg/logo.svg'
-        alt: 'Rapsys'' dev log logo'
     root: 'rapsys_blog'
     title: 'Rapsys'' dev log'
+
+#RapsysUser configuration
+rapsys_user:
+    #Class replacement
+    class:
+        group: 'Rapsys\BlogBundle\Entity\Group'
+        civility: 'Rapsys\BlogBundle\Entity\Civility'
+        user: 'Rapsys\BlogBundle\Entity\User'
+    #Default replacement
+    default:
+        admin: 'ROLE_ADMIN'
+        civility: 'Mister'
+        group: [ 'User' ]
+    #Route replacement
+    route:
+        index:
+            name: 'rapsys_blog'
+        register:
+            name: 'rapsys_user_register'
+    #Translate replacement
+    translate: [ 'title', 'password', 'copy.by', 'copy.long', 'copy.short', 'copy.title', 'head.logo.alt', 'head.site' ]
+    #Languages replacement
+    languages: '%rapsys_blog.languages%'
+    #Contact replacement
+    contact: '%rapsys_blog.contact%'
+    #Context replacement
+    context:
+        copy: '%rapsys_blog.copy%'
+        head:
+            icon: '%rapsys_blog.icon%'
+            logo: '%rapsys_blog.logo%'
+            root: '%rapsys_blog.root%'
+            site: '%rapsys_blog.title%'
+    #Edit replacement
+    edit:
+        #field:
+            #mail: false
+            #password: false
+            #pseudonym: false
+            #slug: false
+        route:
+            index: 'root'
+        view:
+            edit: 'Rapsys\BlogBundle\Form\EditType'
+            name: '@RapsysBlog/form/edit.html.twig'
+            context:
+                title: 'Modify account'
+                password: 'Modify password'
+    #Index replacement
+    index:
+        route:
+            index: 'root'
+        view:
+            name: '@RapsysBlog/user/index.html.twig'
+            context:
+                title: 'User list'
+    #Login replacement
+    login:
+        route:
+            index: 'root'
+        view:
+            name: '@RapsysBlog/form/login.html.twig'
+            context:
+                title: 'Login'
+    #Recover replacement
+    recover:
+        route:
+            index: 'root'
+            recover: 'recover_url'
+        view:
+            name: '@RapsysBlog/form/recover.html.twig'
+            context:
+                title: 'Recover'
+        mail:
+            subject: 'Welcome back %%recipient_name%% to %%head.site%%'
+            html: '@RapsysBlog/mail/recover.html.twig'
+            text: '@RapsysBlog/mail/recover.text.twig'
+            context:
+    #Register replacement
+    register:
+        field:
+            pseudonym: false
+            slug: false
+        route:
+            index: 'root'
+            confirm: 'confirm_url'
+        view:
+            form: 'Rapsys\BlogBundle\Form\RegisterType'
+            name: '@RapsysBlog/form/register.html.twig'
+            context:
+                title: 'Register'
+        mail:
+            subject: 'Welcome %%recipient_name%% to %%head.site%%'
+            html: '@RapsysBlog/mail/register.html.twig'
+            text: '@RapsysBlog/mail/register.text.twig'
+            context:
 
 # Doctrine configuration
 doctrine:
@@ -80,7 +176,6 @@ doctrine:
 
 # Framework configuration
 framework:
-    #TODO: replace in the dependency injection ???
     default_locale: '%rapsys_blog.locale%'
     disallow_search_engine_index: false
     #error_controller: 'Rapsys\BlogBundle\Controller\ErrorController::show'
@@ -88,6 +183,7 @@ framework:
         headers:
             X-Originating-IP: '%env(REMOTE_ADDR)%'
     secret: '%env(APP_SECRET)%'
+    #csrf_protection: true
     session:
         enabled: true
         handler_id: ~
@@ -101,9 +197,12 @@ framework:
 security:
     # Set password hashers
     password_hashers:
-        #Rapsys\BlogBundle\Entity\User: plaintext
-        Rapsys\BlogBundle\Entity\User:
+        #XXX: comment this key in config/security.yaml to prevent users_in_memory induced failures
+        #TODO: see https://symfony.com/doc/current/security/passwords.html (sodium ? + upgrade)
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
             algorithm: 'bcrypt'
+            migrate_from:
+                - 'plaintext'
 
     # Set providers
     providers:
@@ -125,7 +224,11 @@ security:
             #lazy: true
 
             # Activate database provider
+            #XXX: comment this key in config/security.yaml to prevent users_in_memory induced failures
             provider: database
+
+            # Activate user checker
+            user_checker: 'security.user_checker'
 
             #XXX: https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
             #http_basic: ~
@@ -144,6 +247,13 @@ security:
                 username_parameter: 'login[mail]'
                 # Password parameter
                 password_parameter: 'login[password]'
+                # Enable login csrf protection
+                #TODO: enable in framework now that it works here ?
+                enable_csrf: false
+                # Csrf parameter
+                csrf_parameter: 'login[_token]'
+                # Csrf id
+                csrf_token_id: 'login'
 
             # Set logout route
             logout:
@@ -172,30 +282,30 @@ security:
 services:
     #Register abstract controller
     Rapsys\BlogBundle\Controller\AbstractController:
-        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@request_stack', '@translator', '@twig' ]
+        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@security.helper', '@request_stack', '@translator', '@twig' ]
         tags: [ 'controller.service_arguments' ]
     #Register article controller
     Rapsys\BlogBundle\Controller\ArticleController:
-        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@request_stack', '@translator', '@twig' ]
+        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@security.helper', '@request_stack', '@translator', '@twig' ]
         tags: [ 'controller.service_arguments' ]
     #Register default controller
     Rapsys\BlogBundle\Controller\DefaultController:
-        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@request_stack', '@translator', '@twig' ]
+        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@security.helper', '@request_stack', '@translator', '@twig' ]
         tags: [ 'controller.service_arguments' ]
     #Register keyword controller
     Rapsys\BlogBundle\Controller\KeywordController:
-        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@request_stack', '@translator', '@twig' ]
+        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@security.helper', '@request_stack', '@translator', '@twig' ]
         tags: [ 'controller.service_arguments' ]
     Rapsys\BlogBundle\Factory\RepositoryFactory:
         arguments: [ '@request_stack', '@router', '@rapsys_pack.slugger_util', '@translator', '%rapsys_blog.languages%', '%rapsys_blog.locale%' ]
     #Register blog fixture
     Rapsys\BlogBundle\Fixture\BlogFixture:
+        arguments: [ '@rapsys_pack.slugger_util' ]
         tags: [ 'doctrine.fixture.orm' ]
-    #Register security password_hasher_factory as public
-    #XXX: required for command `php bin/console doctrine:`
-    security.password_hasher_factory:
-        class: 'Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory'
-        arguments: [ { 'Rapsys\BlogBundle\Entity\User': { class: 'Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher', arguments: [ ~, ~, ~, '2y'] } } ]
+    #Register form factory as public
+    form.factory:
+        class: 'Symfony\Component\Form\FormFactory'
+        arguments: [ '@form.registry' ]
         public: true
     #Register facebook event subscriber
     Rapsys\PackBundle\Subscriber\FacebookSubscriber:
@@ -205,8 +315,13 @@ services:
     rapsys_blog.facebook_util:
         class: 'Rapsys\PackBundle\Util\FacebookUtil'
         #TODO: create the facebook.png file and add the fonts
+        #TODO: add a default font
         arguments: [ '@router',  '%kernel.project_dir%/var/cache', '%rapsys_pack.path%', 'facebook', '%rapsys_blog.path%/png/facebook.png', { irishgrover: '%rapsys_blog.path%/ttf/irishgrover.v10.ttf', labelleaurore: '%rapsys_blog.path%/ttf/labelleaurore.v10.ttf', dejavusans: '%rapsys_blog.path%/ttf/dejavusans.2.37.ttf', droidsans: '%rapsys_blog.path%/ttf/droidsans.regular.ttf' } ]
         public: true
+    #Register contact form type
+    Rapsys\BlogBundle\Form\ContactType:
+        arguments: [ '@rapsys_pack.image_util', '@rapsys_pack.slugger_util', '@translator' ]
+        tags: [ 'form.type' ]
 
 # Twig configuration
 twig:
@@ -216,6 +331,9 @@ twig:
     #Disable cache
     #XXX: enable forced regeneration of css and js at each page load
     cache: false
+    #Fix form layout for css
+    #XXX: @RapsysBlog is a shortcut to vendor/rapsys/blogbundle/Resources/views directory here
+    form_theme: [ '@RapsysBlog/form/form_div_layout.html.twig' ]
     #Set twig paths
     paths:
         #Required by email.image(site_logo) directive
