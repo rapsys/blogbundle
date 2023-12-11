@@ -1,0 +1,14 @@
+{% extends '@RapsysBlog/mail/_base.html.twig' %}
+{% block content %}
+	<tbody>
+		<tr>
+			<td colspan="2">
+				<h2 title="{% trans %}Subject{% endtrans %}">{{ 'Welcome back to %head.site%'|trans({'%head.site%': head.site}) }}</h2>
+				<h3>{% if recipient_name %}{{ 'Hi %recipient_name%,'|trans({'%recipient_name%': recipient_name}) }}{% else %}{% trans %}Hi,{% endtrans %}{% endif %}</h3>
+				<p>{{ 'Thanks so much for rejoining %head.site%, the blog program.'|trans({'%head.site%': head.site}) }}</p>
+				<p>{% trans %}To recover your account follow this link:{% endtrans %}</p>
+				<p><a href="{{ recover_url|escape('html_attr') }}" class="link">{{ recover_url }}</a></p>
+			</td>
+		</tr>
+	</tbody>
+{% endblock %}
