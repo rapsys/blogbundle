@@ -30,39 +30,18 @@ class KeywordController extends AbstractController {
 	 * @return Response The rendered view
 	 */
 	public function index(Request $request): Response {
-		//With keywords
-		if ($count = $this->doctrine->getRepository(Keyword::class)->findCountAsInt()) {
-			//Negative page or over page
-			if (($page = (int) $request->get('page', 0)) < 0 || $page > $count / $this->limit) {
-				//Throw 404
-				throw $this->createNotFoundException($this->translator->trans('Unable to find keywords (page: %page%)', ['%page%' => $page]));
-			}
+		//With not enough keywords
+		if (($this->count = $this->doctrine->getRepository(Keyword::class)->findCountAsInt()) < $this->page * $this->limit) {
+			//Throw 404
+			throw $this->createNotFoundException($this->translator->trans('Unable to find keywords'));
+		}
 
-			//Without keywords
-			if (empty($this->context['keywords'] = $this->doctrine->getRepository(Keyword::class)->findAllAsArray($page, $this->limit))) {
-				//Throw 404
-				throw $this->createNotFoundException($this->translator->trans('Unable to find keywords'));
-			}
-
-			//With prev link
-			if ($page > 0) {
-				//Set keywords older
-				$this->context['head']['prev'] = $this->context['keywords_prev'] = $this->generateUrl($request->attributes->get('_route'), ['page' => $page - 1]+$request->attributes->get('_route_params'));
-			}
-
-			//With next link
-			if ($count > ($page + 1) * $this->limit) {
-				//Set keywords newer
-				$this->context['head']['next'] = $this->context['keywords_next'] = $this->generateUrl($request->attributes->get('_route'), ['page' => $page + 1]+$request->attributes->get('_route_params'));
-			}
-
+		//Get keywords
+		if ($this->context['keywords'] = $this->doctrine->getRepository(Keyword::class)->findAllAsArray($this->page, $this->limit)) {
 			//Set modified
 			$this->modified = max(array_map(function ($v) { return $v['modified']; }, $this->context['keywords']));
 		//Without keywords
 		} else {
-			//Set empty keywords
-			$this->context['keywords'] = [];
-
 			//Set empty modified
 			$this->modified = new \DateTime('-1 year');
 		}
