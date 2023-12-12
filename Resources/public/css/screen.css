@@ -36,8 +36,13 @@ h2 {
 }
 
 h3 {
-	font-size: 1.17rem;
-	margin: 1.17rem 0;
+	font-size: 1.25rem;
+	line-height: 1.65rem;
+	font-family: 'Lemon',sans-serif;
+	color: #09c;
+	text-shadow: 1.5px 1.5px 3px #136;
+	/*font-size: 1.17rem;
+	margin: 1.17rem 0;*/
 }
 
 h4 {
