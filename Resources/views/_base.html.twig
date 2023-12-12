@@ -1,19 +1,18 @@
 <!DOCTYPE html>
-<html{% if head['locale'] is defined and head['locale'] %} lang="{{ head['locale'] }}"{% endif %}>
-	<head{% if head['facebook'] is defined and head['facebook'] is not empty %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"{% endif %}>
-		{% block metas %}
+<html{% if head.locale is defined and head.locale %} lang="{{ head.locale }}"{% endif %}>
+	<head{% if head.facebook is defined and head.facebook is not empty %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"{% endif %}>
+		{% block head %}
 			<meta charset="UTF-8" />
-			<title>{{ head['title'] }}</title>
+			<title>{{ head.title }}</title>
 			<meta name="viewport" content="width=device-width, initial-scale=1" />
-{#TODO: deal with unset head['description'] and set description #}
-			{% if head['description'] is defined and head['description'] %}
-				<meta name="description" content="{{ head['description'] }}" />
+			{% if head.description is defined and head.description %}
+				<meta name="description" content="{{ head.description }}" />
 			{% endif %}
-			{% if head['keywords'] is defined and head['keywords'] %}
-				<meta name="keywords" content="{{ head['keywords'] }}" />
+			{% if head.keywords is defined and head.keywords %}
+				<meta name="keywords" content="{{ head.keywords }}" />
 			{% endif %}
-			{% if head['facebook'] is defined and head['facebook'] %}
-				{% for property, contents in head['facebook'] %}
+			{% if head.facebook is defined and head.facebook %}
+				{% for property, contents in head.facebook %}
 					{% if contents is iterable %}
 						{% for content in contents %}
 							<meta property="{{ property }}" content="{{ content }}" />
@@ -23,64 +22,68 @@
 					{% endif %}
 				{% endfor %}
 			{% endif %}
-		{% endblock %}
-		{% block links %}
-			{% if site is defined and site is not empty %}
-				<link rel="shortcut icon" type="image/x-icon" href="{{ asset(site.icon.ico) }}" />
-				<link rel="icon" type="image/svg+xml" href="{{ asset(site.icon.svg) }}" />
-				{% for size, icon in site.icon.png %}
-					{# Apple #}
-					{% if size in [120, 152, 167, 180] %}
-						{% if size == 180 %}
-							<link rel="apple-touch-icon" href="{{ asset(icon) }}" />
+			{% block link %}
+				{% if head.icon.ico is defined and head.icon.ico is not empty %}
+					<link rel="shortcut icon" type="image/x-icon" href="{{ asset(head.icon.ico) }}" />
+				{% endif %}
+				{% if head.icon.png is defined and head.icon.png is not empty %}
+					{% for size, icon in head.icon.png %}
+						{# Apple #}
+						{% if size in [120, 152, 167, 180] %}
+							{% if size == 180 %}
+								<link rel="apple-touch-icon" href="{{ asset(icon) }}" />
+							{% endif %}
+							<link rel="apple-touch-icon" sizes="{{ size }}x{{ size }}" href="{{ asset(icon) }}" />
+						{# Windows #}
+						{% elseif size in [70, 150, 310] %}
+							<meta name="msapplication-square{{ size }}x{{ size }}logo" content="{{ asset(icon) }}" />
+						{# Others #}
+						{% else %}
+							<link rel="icon" type="image/png" sizes="{{ size }}x{{ size }}" href="{{ asset(icon) }}" />
 						{% endif %}
-						<link rel="apple-touch-icon" sizes="{{ size }}x{{ size }}" href="{{ asset(icon) }}" />
-					{# Windows #}
-					{% elseif size in [70, 150, 310] %}
-						<meta name="msapplication-square{{ size }}x{{ size }}logo" content="{{ asset(icon) }}" />
-					{# Others #}
-					{% else %}
-						<link rel="icon" type="image/png" sizes="{{ size }}x{{ size }}" href="{{ asset(icon) }}" />
-					{% endif %}
-				{% endfor %}
-			{% endif %}
-			{# stylesheet '//fonts.googleapis.com/css?family=Irish+Grover' '//fonts.googleapis.com/css?family=La+Belle+Aurore' '@RapsysBlogBundle/Resources/public/css/{reset,screen}.css' #}
-			{% stylesheet '@RapsysBlog/css/{reset,droidsans,lemon,notoemoji,screen}.css' %}
-				<link rel="stylesheet" type="text/css" href="{{ asset_url }}?{{ 'now'|date('U') }}" />
-			{% endstylesheet %}
-			{% stopwatch 'stylesheet' %}
-			{% endstopwatch %}
-			{% if head["canonical"] is defined and head['canonical'] %}
-				<link rel="canonical" href="{{ head['canonical'] }}"{% if head['locale'] is defined and head['locale'] %} hreflang="{{ head['locale'] }}"{% endif %} />
-			{% endif %}
-			{% if head['alternates'] is defined and head['alternates'] %}
-				{% for lang, alternate in head['alternates'] %}
-					<link rel="alternate" href="{{ alternate.absolute }}" hreflang="{{ lang }}" />
-				{% endfor %}
-			{% endif %}
-			{% if head.prev is defined and head.prev %}
-				<link rel="prev" href="{{ head.prev }}" hreflang="{{ head.locale }}" />
-			{% endif %}
-			{% if head.next is defined and head.next %}
-				<link rel="next" href="{{ head.next }}" hreflang="{{ head.locale }}" />
-			{% endif %}
+					{% endfor %}
+				{% endif %}
+				{% if head.icon.svg is defined and head.icon.svg is not empty %}
+					<link rel="icon" type="image/svg+xml" href="{{ asset(head.icon.svg) }}" />
+				{% endif %}
+				{# stylesheet '//fonts.googleapis.com/css?family=Irish+Grover' '//fonts.googleapis.com/css?family=La+Belle+Aurore' '@RapsysBlogBundle/Resources/public/css/{reset,screen}.css' #}
+				{% stylesheet '@RapsysBlog/css/{reset,droidsans,lemon,notoemoji,screen}.css' %}
+					<link rel="stylesheet" type="text/css" href="{{ asset_url }}?{{ 'now'|date('U') }}" />
+				{% endstylesheet %}
+				{% stopwatch 'stylesheet' %}
+				{% endstopwatch %}
+				{% if head.canonical is defined and head.canonical %}
+					<link rel="canonical" href="{{ head.canonical }}"{% if head.locale is defined and head.locale %} hreflang="{{ head.locale }}"{% endif %} />
+				{% endif %}
+				{% if head.alternates is defined and head.alternates %}
+					{% for lang, alternate in head.alternates %}
+						<link rel="alternate" href="{{ alternate.absolute }}" hreflang="{{ lang }}" />
+					{% endfor %}
+				{% endif %}
+				{% if head.prev is defined and head.prev %}
+					<link rel="prev" href="{{ head.prev }}" hreflang="{{ head.locale }}" />
+				{% endif %}
+				{% if head.next is defined and head.next %}
+					<link rel="next" href="{{ head.next }}" hreflang="{{ head.locale }}" />
+				{% endif %}
+			{% endblock %}
 		{% endblock %}
 	</head>
 	<body>
 		{% block body %}
 			{% block header %}
 				<header id="header">
-					<a id="logo" href="{{ path(site.root) }}" title="{{ site.title }}">
-						<img src="{{ asset(site.logo.svg) }}?20221024100144" srcset="{{ asset(site.logo.png) }}?20221024100144 200w, {{ asset(site.logo.svg) }}?20221024100144 400w" sizes="(min-width:400px) 400px, 200px" alt="{{ site.logo.alt }}" width="100" height="60" />
-						<strong>{{ site.title }}</strong>
+					<a id="logo" href="{{ path(head.root) }}" title="{{ head.site }}">
+						<img src="{{ asset(head.logo.svg) }}?20221024100144" srcset="{{ asset(head.logo.png) }}?20221024100144 200w, {{ asset(head.logo.svg) }}?20221024100144 400w" sizes="(min-width:400px) 400px, 200px" alt="{{ head.logo.alt }}" width="100" height="60" />
+						<strong>{{ head.site }}</strong>
 					</a>
 					<nav id="nav">
 						<a href="{{ path('rapsys_blog') }}" rel="home">{% trans %}Home{% endtrans %}</a>
 						<a href="{{ path('rapsys_blog_contact') }}" rel="contact">{% trans %}Contact{% endtrans %}</a>
 						{#<a href="{{ path('rapsys_blog_frequently_asked_questions') }}">{% trans %}Frequently asked questions{% endtrans %}</a>#}
-						{% if is_granted('ROLE_ADMIN') %}
+						{#{% if is_granted('ROLE_ADMIN') %}#}
 							<a href="{{ path('rapsys_blog_user') }}">{% trans %}Users{% endtrans %}</a>
-						{% endif %}
+						{#{% endif %}#}
 						{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 							<a href="{{ path('rapsys_user_edit', {mail: app.user.mail|short, hash: app.user.mail|short|hash}) }}">{% trans %}My account{% endtrans %}</a>
 							<a href="{{ path('rapsys_user_logout') }}">{% trans %}Logout{% endtrans %}</a>
@@ -89,8 +92,7 @@
 							<a href="{{ path('rapsys_user_register') }}">{% trans %}Register{% endtrans %}</a>
 						{% endif %}
 					</nav>
-			{#
-					{% block site_subtitle %}{% endblock %}
+					{#{% block site_subtitle %}{% endblock %}
 					{% block site_tagline %}
 						{% if tags is defined and tags %}
 							<ul>
@@ -99,32 +101,30 @@
 								{% endfor %}
 							</ul>
 						{% endif %}
-					{% endblock %}
-			#}
+					{% endblock %}#}
 				</header>
 			{% endblock %}
 			{% block message %}
 				{# pass an array argument to get the messages of those types (['warning', 'error']) #}
 				{% for label, messages in app.flashes %}
 					{% if messages %}
-						<div class="message {{label}}">
+						<section class="message {{label}}">
 							<ul>
 								{% for message in messages %}
 									<li>{{ message }}</li>
 								{% endfor %}
 							</ul>
-						</div>
+						</section>
 					{% endif %}
 				{% endfor %}
 			{% endblock %}
 		{% endblock %}
-{#
-	{% block sidebar %}<aside id="sidebar"></aside>{% endblock %}
-#}
+		{#{% block sidebar %}<aside id="sidebar"></aside>{% endblock %}#}
 		{% block content %}
 			<article>
 				<header>
 					{% block title %}<h1 id="title"><a href="{{ head.canonical }}">{{ title }}</a></h1>{% endblock %}>
+					<p>{{ description }}</p>
 				</header>
 			</article>
 		{% endblock %}
@@ -135,17 +135,17 @@
 					<details><summary>{{ copy.long }}</summary><span>{{ copy.short }} <a href="{{ copy.link }}" title="{{ copy.title }}" rel="author">{{ copy.by }}</a></span></details>
 				{% endif %}
 				{#<a href="{{ path('rapsys_blog_terms_of_service') }}">{% trans %}Terms of service{% endtrans %}</a>#}
-				{% if alternates is defined and alternates %}
-					{% set langs = alternates|keys|filter(v => v|length == 5) %}
+				{% if head.alternates is defined and head.alternates %}
+					{% set langs = head.alternates|keys|filter(v => v|length == 5) %}
 					{% if langs|length > 1 %}
 						<ul>
 							{% for lang in langs %}
-								<li><a href="{{ alternates[lang].relative }}" hreflang="{{ lang|replace({'_': '-'}) }}" title="{{ alternates[lang].title }}">{{ alternates[lang].translated }}</a></li>
+								<li><a href="{{ head.alternates[lang].relative }}" hreflang="{{ lang|replace({'_': '-'}) }}" title="{{ head.alternates[lang].title }}">{{ head.alternates[lang].translated }}</a></li>
 							{% endfor %}
 						</ul>
 					{% else %}
 						{% set lang = langs|first %}
-						<a href="{{ alternates[lang].relative }}" hreflang="{{ lang|replace({'_': '-'}) }}" title="{{ alternates[lang].title }}">{{ alternates[lang].translated }}</a>
+						<a href="{{ head.alternates[lang].relative }}" hreflang="{{ lang|replace({'_': '-'}) }}" title="{{ head.alternates[lang].title }}">{{ head.alternates[lang].translated }}</a>
 					{% endif %}
 				{% else %}
 					<span>&nbsp;</span>
