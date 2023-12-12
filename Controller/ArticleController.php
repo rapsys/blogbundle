@@ -30,39 +30,18 @@ class ArticleController extends AbstractController {
 	 * @return Response The rendered view
 	 */
 	public function index(Request $request): Response {
-		//With articles
-		if ($count = $this->doctrine->getRepository(Article::class)->findCountAsInt()) {
-			//Negative page or over page
-			if (($page = (int) $request->get('page', 0)) < 0 || $page > $count / $this->limit) {
-				//Throw 404
-				throw $this->createNotFoundException($this->translator->trans('Unable to find articles (page: %page%)', ['%page%' => $page]));
-			}
+		//With not enough articles
+		if (($this->count = $this->doctrine->getRepository(Article::class)->findCountAsInt()) < $this->page * $this->limit) {
+			//Throw 404
+			throw $this->createNotFoundException($this->translator->trans('Unable to find articles'));
+		}
 
-			//Without articles
-			if (empty($this->context['articles'] = $this->doctrine->getRepository(Article::class)->findAllAsArray($page, $this->limit))) {
-				//Throw 404
-				throw $this->createNotFoundException($this->translator->trans('Unable to find articles'));
-			}
-
-			//With prev link
-			if ($page > 0) {
-				//Set articles older
-				$this->context['head']['prev'] = $this->context['articles_prev'] = $this->generateUrl($request->attributes->get('_route'), ['page' => $page - 1]+$request->attributes->get('_route_params'));
-			}
-
-			//With next link
-			if ($count > ($page + 1) * $this->limit) {
-				//Set articles newer
-				$this->context['head']['next'] = $this->context['articles_next'] = $this->generateUrl($request->attributes->get('_route'), ['page' => $page + 1]+$request->attributes->get('_route_params'));
-			}
-
+		//Get articles
+		if ($this->context['articles'] = $this->doctrine->getRepository(Article::class)->findAllAsArray($this->page, $this->limit)) {
 			//Set modified
 			$this->modified = max(array_map(function ($v) { return $v['modified']; }, $this->context['articles']));
-		//Without articles
+		//Without keywords
 		} else {
-			//Set empty articles
-			$this->context['articles'] = [];
-
 			//Set empty modified
 			$this->modified = new \DateTime('-1 year');
 		}
@@ -188,17 +167,6 @@ class ArticleController extends AbstractController {
 				return $response;
 			}
 		}
-
-		//Set keywords
-		$this->context['head']['keywords'] = implode(
-			', ',
-			array_map(
-				function ($v) {
-					return $v['title'];
-				},
-				$this->context['article']['keywords']
-			)
-		);
 
 		//Set keywords
 		$this->context['head']['keywords'] = implode(
