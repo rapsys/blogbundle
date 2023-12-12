@@ -166,9 +166,9 @@ SQL;
 		$req = <<<SQL
 SELECT
 	b.id,
-	b.created,
-	b.updated,
-	b.modified,
+	GREATEST(b.created, kat.created) AS created,
+	GREATEST(b.updated, kat.updated) AS updated,
+	GREATEST(b.created, b.updated, kat.created, kat.updated) AS modified,
 	b.body,
 	b.description,
 	b.slug,
@@ -184,7 +184,6 @@ FROM (
 		a.id,
 		GREATEST(a.created, at.created, k.created, kt.created) AS created,
 		GREATEST(a.updated, at.updated, k.updated, kt.updated) AS updated,
-		GREATEST(a.created, at.created, k.created, kt.created, a.updated, at.updated, k.updated, kt.updated) AS modified,
 		at.body,
 		at.description,
 		at.slug,
