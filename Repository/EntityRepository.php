@@ -131,6 +131,7 @@ class EntityRepository extends BaseEntityRepository {
 			':limit' => PHP_INT_MAX,
 			//Set cleanup
 			"\t" => '',
+			"\r" => ' ',
 			"\n" => ' '
 		];
 
