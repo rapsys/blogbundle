@@ -1,0 +1,42 @@
+{% extends '@RapsysBlog/_base.html.twig' %}
+{% block content %}
+	<article id="content">
+		<header>
+			<h1><a href="{{ user.link }}">{{ user.forename }} {{ user.surname }} ({{ user.pseudonym }}){% if is_granted('ROLE_ADMIN') %} &lt;{{ user.mail }}&gt;{% endif %}</a></h1>
+		</header>
+		{% if user.articles is defined and user.articles %}
+			<section>
+				{% for article in user.articles %}
+					<article>
+						<header>
+							<h3><a href="{{ article.link }}">{{ article.title }}</a></h3>
+						</header>
+						<section>
+							<p>{{ article.description }}</p>
+							{% if article.keywords is defined and article.keywords %}
+								<nav>
+									{% for keyword in article.keywords %}
+										<a href="{{ keyword.link }}">{{ keyword.title }}</a>
+									{% endfor %}
+								</nav>
+							{% endif %}
+						</section>
+					</article>
+					<footer>
+						<nav>
+							<a href="{{ article.link }}">{% trans %}Read more{% endtrans %}...</a>
+						</nav>
+					</footer>
+				{% endfor %}
+			</section>
+		{% endif %}
+		<footer>
+			<nav>
+				{% if is_granted('ROLE_ADMIN') %}
+					<a href="{{ user.edit }}">{% trans %}Edit{% endtrans %}</a>
+				{% endif %}
+				<a href="{{ user.link }}">{% trans %}Read more{% endtrans %}...</a>
+			</nav>
+		</footer>
+	</article>
+{% endblock %}
