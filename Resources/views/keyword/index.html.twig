@@ -29,14 +29,14 @@
 				</article>
 			{% endfor %}
 		</section>
-		{% if keywords_prev is defined or keywords_next is defined %}
+		{% if head.prev is defined or head.next is defined %}
 			<footer>
 				<nav class="pager">
-					{% if keywords_prev is defined %}
-						<a href="{{ keywords_prev }}" rel="prev">&lt; {% trans %}Previous keywords{% endtrans %}</a>
+					{% if head.prev is defined %}
+						<a href="{{ head.prev }}" rel="prev">&lt; {% trans %}Previous keywords{% endtrans %}</a>
 					{% endif %}
-					{% if keywords_next is defined %}
-						<a href="{{ keywords_next }}" rel="next">{% trans %}Next keywords{% endtrans %} &gt;</a>
+					{% if head.next is defined %}
+						<a href="{{ head.next }}" rel="next">{% trans %}Next keywords{% endtrans %} &gt;</a>
 					{% endif %}
 				</nav>
 			</footer>
