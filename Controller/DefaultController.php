@@ -11,8 +11,11 @@
 
 namespace Rapsys\BlogBundle\Controller;
 
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mime\Address;
 
 use Rapsys\BlogBundle\Entity\Article;
 
@@ -21,9 +24,50 @@ use Rapsys\BlogBundle\Entity\Article;
  */
 class DefaultController extends AbstractController {
 	/**
+	 * The about page
+	 *
+	 * Display the about informations
+	 *
+	 * @param Request $request The request instance
+	 * @return Response The rendered view or redirection
+	 */
+	public function about(Request $request): Response {
+		//Set page
+		$this->context['title'] = $this->translator->trans('About');
+
+		//Set description
+		$this->context['description'] = $this->translator->trans('Welcome to raphaël\'s developer diary about page');
+
+		//Set keywords
+		$this->context['keywords'] = $this->translator->trans('about');
+
+		//Create response
+		$response = new Response();
+
+		//Set etag
+		//XXX: only for public to force revalidation by last modified
+		$response->setEtag(md5(serialize($this->context)));
+
+		//Set last modified
+		$response->setLastModified((new \DateTime)->setTimestamp(getlastmod()));
+
+		//Set as public
+		$response->setPublic();
+
+		//Without role and modification
+		if ($response->isNotModified($request)) {
+			//Return 304 response
+			return $response;
+		}
+
+		//Render template
+		return $this->render('@RapsysBlog/about.html.twig', $this->context, $response);
+	}
+
+	/**
 	 * The contact page
 	 *
-	 * @desc Send a contact mail to configured contact
+	 * Send a contact mail to configured contact
 	 *
 	 * @param Request $request The request instance
 	 * @return Response The rendered view or redirection
@@ -42,13 +86,16 @@ class DefaultController extends AbstractController {
 		$data = [];
 
 		//With user
-		if ($user = $this->getUser()) {
+		if ($user = $this->security->getUser()) {
 			//Set data
 			$data = [
 				'name' => $user->getRecipientName(),
 				'mail' => $user->getMail()
 			];
 		}
+
+		//Create response
+		$response = new Response();
 
 		//Create the form according to the FormType created previously.
 		//And give the proper parameters
@@ -65,12 +112,18 @@ class DefaultController extends AbstractController {
 				//Get data
 				$data = $form->getData();
 
+				//Set context
+				$context = [
+					'subject' => $data['subject'],
+					'message' => strip_tags($data['message']),
+				]+$this->context;
+
 				//Create message
 				$message = (new TemplatedEmail())
 					//Set sender
 					->from(new Address($data['mail'], $data['name']))
 					//Set recipient
-					->to(new Address($this->config['contact']['mail'], $this->config['contact']['title']))
+					->to(new Address($this->config['contact']['address'], $this->config['contact']['name']))
 					//Set subject
 					->subject($data['subject'])
 
@@ -79,12 +132,7 @@ class DefaultController extends AbstractController {
 					->textTemplate('@RapsysBlog/mail/contact.text.twig')
 
 					//Set context
-					->context(
-						[
-							'subject' => $data['subject'],
-							'message' => strip_tags($data['message']),
-						]+$this->context
-					);
+					->context($context);
 
 				//Try sending message
 				//XXX: mail delivery may silently fail
@@ -105,11 +153,34 @@ class DefaultController extends AbstractController {
 					}
 				}
 			}
+		//With logged user
+		} elseif ($this->checker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+			//Set last modified
+			$response->setLastModified(new \DateTime('-1 year'));
+
+			//Set as private
+			$response->setPrivate();
+		//Without logged user
+		} else {
+			//Set etag
+			//XXX: only for public to force revalidation by last modified
+			$response->setEtag(md5(serialize($this->context)));
+
+			//Set last modified
+			$response->setLastModified((new \DateTime)->setTimestamp(getlastmod()));
+
+			//Set as public
+			$response->setPublic();
+
+			//Without role and modification
+			if ($response->isNotModified($request)) {
+				//Return 304 response
+				return $response;
+			}
 		}
 
 		//Render template
-		#return $this->render('@RapsysAir/form/contact.html.twig', ['form' => $form->createView(), 'sent' => $request->query->get('sent', 0)]+$this->context);
-		return $this->render('@RapsysBlog/contact.html.twig', $this->context, $response);
+		return $this->render('@RapsysBlog/form/contact.html.twig', ['contact' => $form->createView(), 'sent' => $request->query->get('sent', 0)]+$this->context, $response);
 	}
 
 	/**
@@ -121,39 +192,18 @@ class DefaultController extends AbstractController {
 	 * @return Response The rendered view
 	 */
 	public function index(Request $request): Response {
-		//With articles
-		if ($count = $this->doctrine->getRepository(Article::class)->findCountAsInt()) {
-			//Negative page or over page
-			if (($page = (int) $request->get('page', 0)) < 0 || $page > $count / $this->limit) {
-				//Throw 404
-				throw $this->createNotFoundException($this->translator->trans('Unable to find articles (page: %page%)', ['%page%' => $page]));
-			}
+		//With not enough articles
+		if (($this->count = $this->doctrine->getRepository(Article::class)->findCountAsInt()) < $this->page * $this->limit) {
+			//Throw 404
+			throw $this->createNotFoundException($this->translator->trans('Unable to find articles'));
+		}
 
-			//Without articles
-			if (empty($this->context['articles'] = $this->doctrine->getRepository(Article::class)->findAllAsArray($page, $this->limit))) {
-				//Throw 404
-				throw $this->createNotFoundException($this->translator->trans('Unable to find articles'));
-			}
-
-			//With prev link
-			if ($page > 0) {
-				//Set articles older
-				$this->context['head']['prev'] = $this->context['articles_prev'] = $this->generateUrl($request->attributes->get('_route'), ['page' => $page - 1]+$request->attributes->get('_route_params'));
-			}
-
-			//With next link
-			if ($count > ($page + 1) * $this->limit) {
-				//Set articles newer
-				$this->context['head']['next'] = $this->context['articles_next'] = $this->generateUrl($request->attributes->get('_route'), ['page' => $page + 1]+$request->attributes->get('_route_params'));
-			}
-
+		//Get articles
+		if ($this->context['articles'] = $this->doctrine->getRepository(Article::class)->findAllAsArray($this->page, $this->limit)) {
 			//Set modified
 			$this->modified = max(array_map(function ($v) { return $v['modified']; }, $this->context['articles']));
-		//Without articles
+		//Without keywords
 		} else {
-			//Set empty articles
-			$this->context['articles'] = [];
-
 			//Set empty modified
 			$this->modified = new \DateTime('-1 year');
 		}
