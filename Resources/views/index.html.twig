@@ -29,14 +29,14 @@
 				</article>
 			{% endfor %}
 		</section>
-		{% if articles_prev is defined or articles_next is defined %}
+		{% if head.prev is defined or head.next is defined %}
 			<footer>
 				<nav class="pager">
-					{% if articles_prev is defined %}
-						<a href="{{ articles_prev }}" rel="prev">&lt; {% trans %}Previous articles{% endtrans %}</a>
+					{% if head.prev is defined %}
+						<a href="{{ head.prev }}" rel="prev">&lt; {% trans %}Previous articles{% endtrans %}</a>
 					{% endif %}
-					{% if articles_next is defined %}
-						<a href="{{ articles_next }}" rel="next">{% trans %}Next articles{% endtrans %} &gt;</a>
+					{% if head.next is defined %}
+						<a href="{{ head.next }}" rel="next">{% trans %}Next articles{% endtrans %} &gt;</a>
 					{% endif %}
 				</nav>
 			</footer>
