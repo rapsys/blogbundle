@@ -295,6 +295,10 @@ services:
     Rapsys\BlogBundle\Controller\KeywordController:
         arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@security.helper', '@request_stack', '@translator', '@twig' ]
         tags: [ 'controller.service_arguments' ]
+    #Register user controller
+    Rapsys\BlogBundle\Controller\UserController:
+        arguments: [ '@security.authorization_checker', '@service_container', '@rapsys_user.access_decision_manager', '@doctrine', '@rapsys_pack.facebook_util', '@form.factory', '@rapsys_pack.image_util', '@mailer.mailer', '@doctrine.orm.default_entity_manager', '@rapsys_pack.path_package', '@router', '@rapsys_pack.slugger_util', '@security.helper', '@request_stack', '@translator', '@twig' ]
+        tags: [ 'controller.service_arguments' ]
     Rapsys\BlogBundle\Factory\RepositoryFactory:
         arguments: [ '@request_stack', '@router', '@rapsys_pack.slugger_util', '@translator', '%rapsys_blog.languages%', '%rapsys_blog.locale%' ]
     #Register blog fixture
