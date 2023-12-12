@@ -56,6 +56,11 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 	protected array $config;
 
 	/**
+	 * Count integer
+	 */
+	protected int $count;
+
+	/**
 	 * Context array
 	 */
 	protected array $context;
@@ -76,7 +81,7 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 	protected \DateTime $modified;
 
 	/**
-	 * Limit integer
+	 * Page integer
 	 */
 	protected int $page;
 
@@ -453,6 +458,21 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 						$parameters['head']['facebook']['og:locale:alternate'] = str_replace('-', '_', $lang);
 					}
 				}
+			}
+		}
+
+		//With count
+		if (!empty($this->count)) {
+			//With prev link
+			if ($this->page > 0) {
+				//Set head prev
+				$parameters['head']['prev'] = $this->generateUrl($this->request->get('_route'), ['page' => $this->page - 1]+$this->request->get('_route_params'));
+			}
+
+			//With next link
+			if ($this->count > ($this->page + 1) * $this->limit) {
+				//Set head next
+				$parameters['head']['next'] = $this->generateUrl($this->request->get('_route'), ['page' => $this->page + 1]+$this->request->get('_route_params'));
 			}
 		}
 
