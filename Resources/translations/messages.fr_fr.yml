@@ -1,5 +1,5 @@
 # messages.fr_fr.yml
-About: À propos
+User: Utilisateur
 All rights reserved: Tous droits réservés
 Contact: Contacter
 Copyright 2019-2023: Droit d'auteur 2019-2023
@@ -38,3 +38,70 @@ Message: Message
 Your message: Votre message
 Send: Envoyer
 Your message has been sent: Votre message a été envoyé
+, edited the %date%: , edité le %date%
+Thanks so much for joining %head.site%, the blog program.: Merci d'avoir rejoint %head.site%, le programme de blog.
+'To finalize your account follow this link:': 'Pour finaliser votre compte suivez ce lien:'
+Thanks so much for rejoining %head.site%, the blog program.: Merci d'avoir rejoint de nouveau %head.site%, le programme de blog.
+'To recover your account follow this link': 'Pour récupérer votre compte suivez ce lien:'
+Welcome back to %head.site%: Bienvenue à nouveau sur %head.site%
+Hi %recipient_name%,: Salut %recipient_name%,
+Hi,: Salut,
+Welcome to %head.site%: Bienvenue sur %head.site%
+Dev log: Journal de développement
+Recover: Récupérer
+Your account has been disabled: Votre compte a été désactivé
+Your verification mail has been sent, to activate your account follow the confirmation link inside: Votre courriel de vérification a été envoyé, pour activer votre compte suivez le lien de confirmation à l'intérieur
+If you did not receive a verification mail, check your Spam or Junk mail folder: Si vous n''avez pas reçu de mail de vérification, vérifiez votre dossier Spam ou Courrier indésirable
+Your account recovery message has been sent: Votre message de récupération de compte a été envoyé
+Edit: Modifier
+Previous users: Utilisateurs précédents
+Next users: Utilisateurs suivants
+Users: Utilisateurs
+My account: Mon compte
+Logout: Se déconnecter
+Unable to find articles: Impossible de trouver les articles
+'Unable to find article: %id%': 'Impossible de trouver l''article : %id%'
+Unable to find keywords: Impossible de trouver les mots-clés
+'Unable to find keyword: %id%': 'Impossible de trouver le mot-clé : %id%'
+Unable to find users: Impossible de trouver les utilisateurs
+Users list: Liste des utilisateurs
+'Welcome to raphaël''s developer diary user listing': 'Bienvenue dans la liste des utilisateurs du carnet de développement de Raphaël'
+'Unable to find user: %id%': 'Impossible de trouver l''utlisateur : %id%'
+Captcha is invalid: Le captcha n'est pas valide
+Unable to list users: Impossible de répertorier les utilisateurs
+'Invalid %field% field: %value%': 'Champ %field% invalide : %value%'
+Account do not exists: Le compte n'existe pas
+Your account has been activated: Votre compte a été activé
+Unable to find account: Impossible de trouver le compte
+Unable to access user: Impossible d'accéder à l'utilisateur
+Account password updated: Mot de passe du compte mis à jour
+Account updated: Compte mis à jour
+To change your password login with your mail and any password then follow the procedure: Pour modifier votre mot de passe connectez-vous avec votre mail et n'importe quel mot de passe puis suivez la procédure
+Use this form to recover your account: Utilisez ce formulaire pour récupérer votre compte
+Outdated recover link: Lien de récupération obsolète
+Your recovery mail has been sent, to retrieve your account follow the recuperate link inside: Votre courriel de récupération a été envoyé, pour récupérer votre compte suivez le lien de récupération à l''intérieur
+If you did not receive a recovery mail, check your Spam or Junk mail folder: Si vous n'avez pas reçu de courriel de récupération, vérifiez votre dossier Spam ou Courrier indésirable
+Unable to reach account: Impossible de joindre le compte
+'register: mail=%mail% locale=%locale% confirm=%confirm%': 'register: mail=%mail% locale=%locale% confirm=%confirm%'
+Modify account: Modifier le compte
+Modify password: Modifier le mot de passe
+By Raphaël: Par Raphaël
+User list: Liste d'utilisateur
+Password: Mot de passe
+Your password: Votre mot de passe
+Account created: Compte créé
+Account already exists: Compte déjà existant
+Account not enabled: Compte pas actif
+About: À propos
+Admin: Administrateur
+Confirm password: Confirmer le mot de passe
+Your password confirmation: Votre confirmation de mot de passe
+Civility: Civilité
+Your civility: Votre civilité
+Mister: Monsieur
+Madam: Madame
+Miss: Mademoiselle
+Forename: Prénom
+Your forename: Votre prénom
+Surname: Nom de famille
+Your surname: Votre nom de famille

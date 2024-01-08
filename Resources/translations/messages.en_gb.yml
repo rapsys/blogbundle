@@ -38,3 +38,70 @@ Message: Message
 Your message: Your message
 Send: Send
 Your message has been sent: Your message has been sent
+, edited the %date%: , edited the %date%
+Thanks so much for joining %head.site%, the blog program.: Thanks so much for joining %head.site%, the blog program.
+'To finalize your account follow this link:': 'To finalize your account follow this link:'
+Thanks so much for rejoining %head.site%, the blog program.: Thanks so much for rejoining %head.site%, the blog program.
+'To recover your account follow this link': 'To recover your account follow this link:'
+Welcome back to %head.site%: Welcome back to %head.site%
+Hi %recipient_name%,: Hi %recipient_name%,
+Hi,: Hi,
+Welcome to %head.site%: Welcome to %head.site%
+Dev log: Dev log
+Recover: Recover
+Your account has been disabled: Your account has been disabled
+Your verification mail has been sent, to activate your account follow the confirmation link inside: Your verification mail has been sent, to activate your account follow the confirmation link inside
+If you did not receive a verification mail, check your Spam or Junk mail folder: If you did not receive a verification mail, check your Spam or Junk mail folder
+Your account recovery message has been sent: Your account recovery message has been sent
+Edit: Edit
+Previous users: Previous users
+Next users: Next users
+Users: Users
+My account: My account
+Logout: Logout
+Unable to find articles: Unable to find articles
+'Unable to find article: %id%': 'Unable to find article: %id%'
+Unable to find keywords: Unable to find keywords
+'Unable to find keyword: %id%': 'Unable to find keyword: %id%'
+Unable to find users: Unable to find users
+Users list: Users list
+'Welcome to raphaël''s developer diary user listing': 'Welcome to raphaël''s developer diary user listing'
+'Unable to find user: %id%': 'Unable to find user: %id%'
+Captcha is invalid: Captcha is invalid
+Unable to list users: Unable to list users
+'Invalid %field% field: %value%': 'Invalid %field% field: %value%'
+Account do not exists: Account do not exists
+Your account has been activated: Your account has been activated
+Unable to find account: Unable to find account
+Unable to access user: Unable to access user
+Account password updated: Account password updated
+Account updated: Account updated
+To change your password login with your mail and any password then follow the procedure: To change your password login with your mail and any password then follow the procedure
+Use this form to recover your account: Use this form to recover your account
+Outdated recover link: Outdated recover link
+Your recovery mail has been sent, to retrieve your account follow the recuperate link inside: Your recovery mail has been sent, to retrieve your account follow the recuperate link inside
+If you did not receive a recovery mail, check your Spam or Junk mail folders: If you did not receive a recovery mail, check your Spam or Junk mail folders
+Unable to reach account: Unable to reach account
+'register: mail=%mail% locale=%locale% confirm=%confirm%': 'register: mail=%mail% locale=%locale% confirm=%confirm%'
+Modify account: Modify account
+Modify password: Modify password
+By Raphaël: By Raphaël
+User list: User list
+Password: Password
+Your password: Your password
+Account created: Account created
+Account already exists: Account already exists
+Account not enabled: Account not enabled
+Admin: Admin
+User: User
+Confirm password: Confirm password
+Your password confirmation: Your password confirmation
+Civility: Civility
+Your civility: Your civility
+Mister: Mister
+Madam: Madam
+Miss: Miss
+Forename: Forename
+Your forename: Your forename
+Surname: Surname
+Your surname: Your surname
