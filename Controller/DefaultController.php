@@ -144,13 +144,8 @@ class DefaultController extends AbstractController {
 					return $this->redirectToRoute($request->get('_route'), ['sent' => 1]+$request->get('_route_params'));
 				//Catch obvious transport exception
 				} catch(TransportExceptionInterface $e) {
-					if ($message = $e->getMessage()) {
-						//Add error message mail unreachable
-						$form->get('mail')->addError(new FormError($this->translator->trans('Unable to contact: %mail%: %message%', ['%mail%' => $this->config['contact']['mail'], '%message%' => $this->translator->trans($message)])));
-					} else {
-						//Add error message mail unreachable
-						$form->get('mail')->addError(new FormError($this->translator->trans('Unable to contact: %mail%', ['%mail%' => $this->config['contact']['mail']])));
-					}
+					//Add error message mail unreachable
+					$form->get('mail')->addError(new FormError($this->translator->trans('Unable to reach account')));
 				}
 			}
 		//With logged user
