@@ -8,8 +8,8 @@
 			{% if disabled is defined and disabled %}
 				<p class="message error">{% trans %}Your account has been disabled{% endtrans %}</p>
 			{% elseif sent is defined and sent %}
-				<p class="message notice">{% trans %}Your verification mail has been sent, to activate your account you must follow the confirmation link inside{% endtrans %}</p>
-				<p class="message warning">{% trans %}If you did not receive a verification mail, check your Spam or Junk mail folders{% endtrans %}</p>
+				<p class="message notice">{% trans %}Your verification mail has been sent, to activate your account follow the confirmation link inside{% endtrans %}</p>
+				<p class="message warning">{% trans %}If you did not receive a verification mail, check your Spam or Junk mail folder{% endtrans %}</p>
 			{% else %}
 				{{ form_start(edit) }}
 					{% if edit.mail is defined %}
