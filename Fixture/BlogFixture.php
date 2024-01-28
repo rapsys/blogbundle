@@ -412,7 +412,7 @@ Depending on how likely you are to have transparency in each cases you might wan
 
 Big thanks to these articles which expains how these parts work in a bit more detail:
 - <https://www.jonefox.com/blog/2011/04/15/how-to-detect-transparency-in-png-images>
-- <http://camendesign.com/code/uth1_is-png-32bit>
+- <https://camendesign.com/code/uth1_is-png-32bit>
 - <https://stackoverflow.com/questions/5495275/how-to-check-if-an-image-has-transparency-using-gd>
 
 Hope this helps someone else out there.'
@@ -469,7 +469,7 @@ Selon les probabilités de rencontrer les différents cas de transparence vous p
 
 Un grand merci à ces articles qui expliquent plus en détail comment fonctionnent les différentes parties de ce code:
 - <https://www.jonefox.com/blog/2011/04/15/how-to-detect-transparency-in-png-images>
-- <http://camendesign.com/code/uth1_is-png-32bit>
+- <https://camendesign.com/code/uth1_is-png-32bit>
 - <https://stackoverflow.com/questions/5495275/how-to-check-if-an-image-has-transparency-using-gd>
 
 En espérant que cela puisse aider quelques personnes.'
