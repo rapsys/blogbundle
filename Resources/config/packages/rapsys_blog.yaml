@@ -160,6 +160,12 @@ rapsys_user:
 
 # Doctrine configuration
 doctrine:
+    # Dbal configuration
+    dbal:
+        charset: 'utf8mb4'
+        default_table_options:
+            charset: 'utf8mb4'
+            collate: 'utf8mb4_unicode_ci'
     # Orm configuration
     orm:
         # Replace repository factory
