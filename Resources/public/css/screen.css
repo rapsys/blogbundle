@@ -463,96 +463,44 @@ p.message {
 }
 
 /* Article */
-#article,
-#contact,
-#keyword {
-	margin: .5rem 0;
-	border-radius: .5rem;
-	border: .1rem solid #00c3f9;
-	padding: .5rem;
-	overflow-x: hidden;
-}
-
-#article header,
-#contact header,
-#keyword header {
-	background-color: #00c3f9;
-	margin: -.5rem -.5rem .5rem -.5rem;
-	padding: .5rem;
-	color: #0063c9;
-}
-
-#article header h3,
-#contact header h3,
-#keyword header h3 {
-	margin: 0;
-}
-
-#article header p,
-#keyword header p {
-	margin: 0;
-	font-size: .75rem;
-	display: flex;
-	justify-content: space-between;
-}
-
-#article a,
-#keyword a {
-	color: #0063c9;
-}
-
-#article p,
-#article pre,
-#article ul,
-#contact div,
-#keyword p,
-#keyword pre,
-#keyword ul {
+article p,
+article pre,
+article ul {
 	margin-bottom: .5rem;
 }
 
-#article p,
-#keyword p {
-	text-align: justify;
-	text-justify: distribute;
+article p:last-child {
+	margin-bottom: 0;
 }
 
-#article p:last-child,
-#contact div:last-child {
-	margin-bottom: none;
+article ul {
+	margin-top: -.5rem;
+	list-style: "- " inside none;
+	padding-left: .5rem;
 }
 
-#contact input,
-#contact textarea {
-	width: 24rem;
-	padding: 2px;
-	border: 1px solid #00c3f9;
+article li {
+	margin-bottom: .3rem;
 }
 
-#contact button.submit {
-	width: 4rem;
-	margin: 0 10rem;
+article li:last-child {
+	margin-bottom: 0;
 }
 
-#contact div div:last-child {
-	text-align: center;
+article ul:first-child {
+	margin-top: none;
 }
 
-#article pre {
+article pre {
 	border-radius: .5rem;
 	border: .1rem solid #00c3f9;
 	padding: .5rem;
-	color: #0063c9;
-	overflow-x: auto;
 	margin-bottom: 1rem;
-}
-
-#article ul {
-	margin-top: -.5rem;
-}
-
-#article ul:first-child {
-	margin-top: none;
+	color: #0063c9;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	word-break: break-all;
+	overflow-x: auto;
 }
 
 #footer {
