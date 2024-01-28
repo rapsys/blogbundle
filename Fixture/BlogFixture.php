@@ -299,7 +299,7 @@ class BlogFixture extends Fixture {
 					'description' => 'Intermediate server application between two hosts to improve privacy, security and performance'
 				],
 				'fr_fr' => [
-					'title' => 'Serveur mandataire',
+					'title' => 'Proxy',
 					'description' => 'Application serveur intermédiaire entre deux hôtes pour améliorer la confidentialité, la sécurité et les performances'
 				]
 			],
