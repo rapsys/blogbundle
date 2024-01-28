@@ -857,13 +857,13 @@ global
 	key-base /etc/pki/tls/private
 	# Don\'t load extra files
 	ssl-load-extra-files none
-	# Disable SSL-v3 TLSv1.0 TLSv1.1 and TLS tickets
-	ssl-default-server-options ssl-min-ver TLSv1.2 no-tls-tickets
 	# Do not verify certificate
 	ssl-server-verify none
-	# Supported bind ciphers
+	# Supported bind ciphersuites
 	#XXX: https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended-configurations
-	ssl-default-bind-ciphers TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+	ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+	# Disable SSL-v3 TLSv1.0 TLSv1.1 and TLSv1.2 without TLS tickets
+	ssl-default-bind-options ssl-min-ver TLSv1.3
 
 	# SSL/TLS session cache size
 	tune.ssl.cachesize 20000
@@ -1384,13 +1384,13 @@ global
 	key-base /etc/pki/tls/private
 	# Don\'t load extra files
 	ssl-load-extra-files none
-	# Disable SSL-v3 TLSv1.0 TLSv1.1 and TLS tickets
-	ssl-default-server-options ssl-min-ver TLSv1.2 no-tls-tickets
 	# Do not verify certificate
 	ssl-server-verify none
-	# Supported bind ciphers
+	# Supported bind ciphersuites
 	#XXX: https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended-configurations
-	ssl-default-bind-ciphers TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+	ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+	# Disable SSL-v3 TLSv1.0 TLSv1.1 and TLSv1.2 without TLS tickets
+	ssl-default-bind-options ssl-min-ver TLSv1.3
 
 	# SSL/TLS session cache size
 	tune.ssl.cachesize 20000
