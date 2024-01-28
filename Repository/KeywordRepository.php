@@ -72,7 +72,7 @@ SELECT
 FROM RapsysBlogBundle:Keyword AS k
 JOIN RapsysBlogBundle:KeywordTranslation AS kt ON (kt.keyword_id = k.id AND kt.locale = :locale)
 GROUP BY k.id
-ORDER BY updated, created DESC
+ORDER BY updated, created DESC, k.id
 LIMIT :offset, :count
 SQL;
 

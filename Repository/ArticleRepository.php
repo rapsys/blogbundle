@@ -79,7 +79,7 @@ LEFT JOIN RapsysBlogBundle:ArticleKeyword AS ak ON (ak.article_id = a.id)
 LEFT JOIN RapsysBlogBundle:Keyword AS k ON (k.id = ak.keyword_id)
 LEFT JOIN RapsysBlogBundle:KeywordTranslation AS kt ON (kt.keyword_id = k.id AND kt.locale = :locale)
 GROUP BY a.id
-ORDER BY updated, created DESC
+ORDER BY updated, created DESC, a.id
 LIMIT :offset, :count
 SQL;
 
